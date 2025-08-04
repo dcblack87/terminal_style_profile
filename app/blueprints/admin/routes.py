@@ -5,8 +5,8 @@ Admin blueprint routes for blog and portfolio management.
 from flask import render_template, redirect, url_for, flash, request, abort
 from flask_login import login_required, current_user
 from app.blueprints.admin import bp
-from app.models import BlogPost, PortfolioItem, Tag, ContactMessage
-from app.forms import BlogPostForm, PortfolioItemForm, TagForm
+from app.models import BlogPost, PortfolioItem, Tag, ContactMessage, User
+from app.forms import BlogPostForm, PortfolioItemForm, TagForm, UserProfileForm
 from app import db
 from datetime import datetime
 
@@ -362,3 +362,50 @@ def delete_message(id):
     db.session.commit()
     flash('Message deleted successfully!', 'success')
     return redirect(url_for('admin.messages'))
+
+# User Profile Management
+@bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def profile():
+    """User profile management - change username and password."""
+    form = UserProfileForm(current_user.username)
+    
+    if form.validate_on_submit():
+        # Verify current password
+        if not current_user.check_password(form.current_password.data):
+            flash('Current password is incorrect.', 'error')
+            return render_template('admin/profile.html', form=form)
+        
+        # Track what was changed
+        username_changed = form.username.data != current_user.username
+        password_changed = bool(form.new_password.data)
+        
+        # Update username if changed
+        if username_changed:
+            current_user.username = form.username.data
+        
+        # Update password if provided
+        if password_changed:
+            current_user.set_password(form.new_password.data)
+        
+        # Save changes
+        db.session.commit()
+        
+        # Show appropriate success message
+        if username_changed and password_changed:
+            flash('Username and password updated successfully!', 'success')
+        elif username_changed:
+            flash('Username updated successfully!', 'success')
+        elif password_changed:
+            flash('Password updated successfully!', 'success')
+        else:
+            flash('No changes were made.', 'info')
+        
+        return redirect(url_for('admin.profile'))
+    
+    # Pre-populate username
+    if not form.username.data:
+        form.username.data = current_user.username
+    
+    return render_template('admin/profile.html', form=form)

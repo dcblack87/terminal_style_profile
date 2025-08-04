@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile - Admin - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <section class="terminal-window mb-8">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-warning text-sm font-bold">
+                    <i class="fas fa-user-cog mr-2"></i>
+                    user_profile.py
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                        User Profile Settings
+                    </h1>
+                    <p class="terminal-secondary">
+                        Update your username and password
+                    </p>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('admin.dashboard') }}" 
+                       class="terminal-button text-sm">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Profile Form -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-edit mr-2"></i>
+                    edit_profile.form
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="max-w-2xl mx-auto">
+                <form method="POST" class="space-y-8">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Current User Info -->
+                    <div class="bg-gray-900/30 border border-gray-700 rounded-lg p-6 mb-8">
+                        <h3 class="text-lg font-bold terminal-secondary mb-4">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Current Account Information
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="terminal-muted">Current Username:</span>
+                                <span class="terminal-primary ml-2">{{ current_user.username }}</span>
+                            </div>
+                            <div>
+                                <span class="terminal-muted">Account Created:</span>
+                                <span class="terminal-text ml-2">{{ current_user.created_at.strftime('%Y-%m-%d') if current_user.created_at }}</span>
+                            </div>
+                            <div>
+                                <span class="terminal-muted">Last Login:</span>
+                                <span class="terminal-text ml-2">{{ current_user.last_login.strftime('%Y-%m-%d %H:%M') if current_user.last_login else 'Never' }}</span>
+                            </div>
+                            <div>
+                                <span class="terminal-muted">Admin Status:</span>
+                                <span class="terminal-primary ml-2">
+                                    <i class="fas fa-check-circle mr-1"></i>Active
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Username Field -->
+                    <div>
+                        <label for="{{ form.username.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                            <i class="fas fa-user mr-2"></i>
+                            Username:
+                        </label>
+                        {{ form.username(class="w-full terminal-input") }}
+                        {% if form.username.errors %}
+                            <div class="mt-2 text-sm terminal-error">
+                                {% for error in form.username.errors %}
+                                    <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <p class="mt-2 text-xs terminal-muted">
+                            <i class="fas fa-info mr-1"></i>
+                            Username must be 3-80 characters long and unique.
+                        </p>
+                    </div>
+                    
+                    <!-- Current Password Field -->
+                    <div>
+                        <label for="{{ form.current_password.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                            <i class="fas fa-lock mr-2"></i>
+                            Current Password:
+                        </label>
+                        {{ form.current_password(class="w-full terminal-input") }}
+                        {% if form.current_password.errors %}
+                            <div class="mt-2 text-sm terminal-error">
+                                {% for error in form.current_password.errors %}
+                                    <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <p class="mt-2 text-xs terminal-muted">
+                            <i class="fas fa-shield-alt mr-1"></i>
+                            Required to verify your identity before making changes.
+                        </p>
+                    </div>
+                    
+                    <!-- Password Change Section -->
+                    <div class="border-t border-gray-700 pt-6">
+                        <h3 class="text-lg font-bold terminal-secondary mb-4">
+                            <i class="fas fa-key mr-2"></i>
+                            Change Password (Optional)
+                        </h3>
+                        <p class="text-sm terminal-muted mb-4">
+                            Leave these fields empty if you don't want to change your password.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            <!-- New Password Field -->
+                            <div>
+                                <label for="{{ form.new_password.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                                    <i class="fas fa-key mr-2"></i>
+                                    New Password:
+                                </label>
+                                {{ form.new_password(class="w-full terminal-input") }}
+                                {% if form.new_password.errors %}
+                                    <div class="mt-2 text-sm terminal-error">
+                                        {% for error in form.new_password.errors %}
+                                            <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <p class="mt-2 text-xs terminal-muted">
+                                    <i class="fas fa-info mr-1"></i>
+                                    Password must be at least 6 characters long.
+                                </p>
+                            </div>
+                            
+                            <!-- Confirm Password Field -->
+                            <div>
+                                <label for="{{ form.confirm_password.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                                    <i class="fas fa-check-double mr-2"></i>
+                                    Confirm New Password:
+                                </label>
+                                {{ form.confirm_password(class="w-full terminal-input") }}
+                                {% if form.confirm_password.errors %}
+                                    <div class="mt-2 text-sm terminal-error">
+                                        {% for error in form.confirm_password.errors %}
+                                            <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Warning -->
+                    <div class="bg-yellow-900/20 border border-yellow-600/50 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle terminal-warning mr-3 mt-1"></i>
+                            <div>
+                                <h4 class="font-bold terminal-warning mb-1">Security Notice</h4>
+                                <p class="text-sm terminal-text">
+                                    Changing your password will log you out from all other sessions. 
+                                    Make sure to remember your new credentials.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="text-center pt-4">
+                        <button type="submit" class="terminal-button px-8">
+                            <i class="fas fa-save mr-2"></i>
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password strength indicator
+    const newPasswordField = document.getElementById('new_password');
+    const confirmPasswordField = document.getElementById('confirm_password');
+    
+    if (newPasswordField) {
+        // Create password strength indicator
+        const strengthIndicator = document.createElement('div');
+        strengthIndicator.className = 'mt-2 text-xs';
+        strengthIndicator.id = 'password-strength';
+        newPasswordField.parentElement.appendChild(strengthIndicator);
+        
+        newPasswordField.addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+            updateStrengthIndicator(strength, password.length);
+        });
+        
+        // Real-time password confirmation check
+        confirmPasswordField.addEventListener('input', function() {
+            const newPassword = newPasswordField.value;
+            const confirmPassword = this.value;
+            
+            const parent = this.parentElement;
+            let feedback = parent.querySelector('.password-match-feedback');
+            
+            if (!feedback) {
+                feedback = document.createElement('div');
+                feedback.className = 'password-match-feedback mt-2 text-xs';
+                parent.appendChild(feedback);
+            }
+            
+            if (confirmPassword.length > 0) {
+                if (newPassword === confirmPassword) {
+                    feedback.innerHTML = '<i class="fas fa-check mr-1 terminal-primary"></i><span class="terminal-primary">Passwords match</span>';
+                } else {
+                    feedback.innerHTML = '<i class="fas fa-times mr-1 terminal-error"></i><span class="terminal-error">Passwords do not match</span>';
+                }
+            } else {
+                feedback.innerHTML = '';
+            }
+        });
+    }
+    
+    function calculatePasswordStrength(password) {
+        let score = 0;
+        if (password.length >= 6) score++;
+        if (password.length >= 8) score++;
+        if (/[a-z]/.test(password)) score++;
+        if (/[A-Z]/.test(password)) score++;
+        if (/[0-9]/.test(password)) score++;
+        if (/[^A-Za-z0-9]/.test(password)) score++;
+        return score;
+    }
+    
+    function updateStrengthIndicator(strength, length) {
+        const indicator = document.getElementById('password-strength');
+        if (!indicator) return;
+        
+        if (length === 0) {
+            indicator.innerHTML = '';
+            return;
+        }
+        
+        let strengthText = '';
+        let strengthClass = '';
+        
+        if (strength <= 2) {
+            strengthText = 'Weak';
+            strengthClass = 'terminal-error';
+        } else if (strength <= 4) {
+            strengthText = 'Medium';
+            strengthClass = 'terminal-warning';
+        } else {
+            strengthText = 'Strong';
+            strengthClass = 'terminal-primary';
+        }
+        
+        indicator.innerHTML = `<i class="fas fa-shield-alt mr-1"></i><span class="${strengthClass}">Password strength: ${strengthText}</span>`;
+    }
+    
+    // Form submission confirmation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const newPassword = document.getElementById('new_password').value;
+        if (newPassword) {
+            if (!confirm('Changing your password will log you out from all other sessions. Continue?')) {
+                e.preventDefault();
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
