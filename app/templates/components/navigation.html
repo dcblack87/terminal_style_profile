@@ -1,0 +1,202 @@
+<!-- Terminal Navigation Bar -->
+<nav class="terminal-window mx-4 mt-4 mb-0">
+    <div class="terminal-header">
+        <div class="flex items-center space-x-4">
+            <div class="terminal-controls">
+                <div class="terminal-control control-close"></div>
+                <div class="terminal-control control-minimize"></div>
+                <div class="terminal-control control-maximize"></div>
+            </div>
+            <span class="terminal-primary text-sm font-bold">
+                <i class="fas fa-terminal mr-2"></i>
+                {{ config.SITE_NAME }}
+            </span>
+        </div>
+        <div class="terminal-muted text-xs">
+            user@terminal:~$
+        </div>
+    </div>
+    
+    <!-- Navigation Menu -->
+    <div class="p-4 border-b border-gray-700">
+        <div class="flex flex-wrap items-center justify-between">
+            <!-- Logo/Brand -->
+            <a href="{{ url_for('main.index') }}" class="flex items-center space-x-2 terminal-primary hover:neon-glow transition-all">
+                <i class="fas fa-code text-lg"></i>
+                <span class="font-bold text-lg hidden sm:inline">{{ config.SITE_NAME }}</span>
+            </a>
+            
+            <!-- Main Navigation -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="{{ url_for('main.index') }}" 
+                   class="nav-link {{ 'terminal-primary' if request.endpoint == 'main.index' else 'terminal-text hover:terminal-primary' }} transition-colors">
+                    <i class="fas fa-home mr-1"></i>
+                    home
+                </a>
+                
+                <a href="{{ url_for('main.about') }}" 
+                   class="nav-link {{ 'terminal-primary' if request.endpoint == 'main.about' else 'terminal-text hover:terminal-primary' }} transition-colors">
+                    <i class="fas fa-user mr-1"></i>
+                    about
+                </a>
+                
+                <a href="{{ url_for('main.portfolio') }}" 
+                   class="nav-link {{ 'terminal-primary' if request.blueprint == 'main' and 'portfolio' in request.endpoint else 'terminal-text hover:terminal-primary' }} transition-colors">
+                    <i class="fas fa-folder-open mr-1"></i>
+                    portfolio
+                </a>
+                
+                <a href="{{ url_for('blog.index') }}" 
+                   class="nav-link {{ 'terminal-primary' if request.blueprint == 'blog' else 'terminal-text hover:terminal-primary' }} transition-colors">
+                    <i class="fas fa-blog mr-1"></i>
+                    blog
+                </a>
+                
+                <a href="{{ url_for('main.contact') }}" 
+                   class="nav-link {{ 'terminal-primary' if request.endpoint == 'main.contact' else 'terminal-text hover:terminal-primary' }} transition-colors">
+                    <i class="fas fa-envelope mr-1"></i>
+                    contact
+                </a>
+                
+                <a href="{{ url_for('main.terminal') }}" 
+                   class="nav-link {{ 'terminal-primary' if request.endpoint == 'main.terminal' else 'terminal-text hover:terminal-primary' }} transition-colors">
+                    <i class="fas fa-terminal mr-1"></i>
+                    terminal
+                </a>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="hidden lg:flex items-center space-x-4">
+                {% if config.GITHUB_URL %}
+                <a href="{{ config.GITHUB_URL }}" target="_blank" 
+                   class="terminal-secondary hover:terminal-primary hover:neon-glow transition-all" 
+                   title="GitHub">
+                    <i class="fab fa-github text-lg"></i>
+                </a>
+                {% endif %}
+                
+                {% if config.TWITTER_URL %}
+                <a href="{{ config.TWITTER_URL }}" target="_blank" 
+                   class="terminal-secondary hover:terminal-primary hover:neon-glow transition-all" 
+                   title="Twitter">
+                    <i class="fab fa-twitter text-lg"></i>
+                </a>
+                {% endif %}
+                
+                {% if config.YOUTUBE_URL %}
+                <a href="{{ config.YOUTUBE_URL }}" target="_blank" 
+                   class="terminal-secondary hover:terminal-primary hover:neon-glow transition-all" 
+                   title="YouTube">
+                    <i class="fab fa-youtube text-lg"></i>
+                </a>
+                {% endif %}
+                
+                {% if current_user.is_authenticated %}
+                <div class="border-l border-gray-600 pl-4 ml-4">
+                    <a href="{{ url_for('admin.dashboard') }}" 
+                       class="terminal-warning hover:terminal-primary transition-colors" 
+                       title="Admin Dashboard">
+                        <i class="fas fa-cogs mr-1"></i>
+                        admin
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-toggle" class="md:hidden terminal-primary hover:neon-glow">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-gray-700">
+        <div class="p-4 space-y-2">
+            <a href="{{ url_for('main.index') }}" 
+               class="block py-2 terminal-text hover:terminal-primary transition-colors">
+                <i class="fas fa-home mr-2"></i>
+                home
+            </a>
+            <a href="{{ url_for('main.about') }}" 
+               class="block py-2 terminal-text hover:terminal-primary transition-colors">
+                <i class="fas fa-user mr-2"></i>
+                about
+            </a>
+            <a href="{{ url_for('main.portfolio') }}" 
+               class="block py-2 terminal-text hover:terminal-primary transition-colors">
+                <i class="fas fa-folder-open mr-2"></i>
+                portfolio
+            </a>
+            <a href="{{ url_for('blog.index') }}" 
+               class="block py-2 terminal-text hover:terminal-primary transition-colors">
+                <i class="fas fa-blog mr-2"></i>
+                blog
+            </a>
+            <a href="{{ url_for('main.contact') }}" 
+               class="block py-2 terminal-text hover:terminal-primary transition-colors">
+                <i class="fas fa-envelope mr-2"></i>
+                contact
+            </a>
+            <a href="{{ url_for('main.terminal') }}" 
+               class="block py-2 terminal-text hover:terminal-primary transition-colors">
+                <i class="fas fa-terminal mr-2"></i>
+                terminal
+            </a>
+            
+            <!-- Mobile Social Links -->
+            <div class="pt-4 border-t border-gray-700 flex space-x-4">
+                {% if config.GITHUB_URL %}
+                <a href="{{ config.GITHUB_URL }}" target="_blank" 
+                   class="terminal-secondary hover:terminal-primary transition-colors">
+                    <i class="fab fa-github text-lg"></i>
+                </a>
+                {% endif %}
+                {% if config.TWITTER_URL %}
+                <a href="{{ config.TWITTER_URL }}" target="_blank" 
+                   class="terminal-secondary hover:terminal-primary transition-colors">
+                    <i class="fab fa-twitter text-lg"></i>
+                </a>
+                {% endif %}
+                {% if config.YOUTUBE_URL %}
+                <a href="{{ config.YOUTUBE_URL }}" target="_blank" 
+                   class="terminal-secondary hover:terminal-primary transition-colors">
+                    <i class="fab fa-youtube text-lg"></i>
+                </a>
+                {% endif %}
+            </div>
+            
+            {% if current_user.is_authenticated %}
+            <div class="pt-2 border-t border-gray-700">
+                <a href="{{ url_for('admin.dashboard') }}" 
+                   class="block py-2 terminal-warning hover:terminal-primary transition-colors">
+                    <i class="fas fa-cogs mr-2"></i>
+                    admin dashboard
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Menu Toggle Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuToggle && mobileMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+            
+            // Change icon
+            const icon = mobileMenuToggle.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.className = 'fas fa-bars text-lg';
+            } else {
+                icon.className = 'fas fa-times text-lg';
+            }
+        });
+    }
+});
+</script>

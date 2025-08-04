@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Posts - Admin - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <section class="terminal-window mb-8">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-warning text-sm font-bold">
+                    <i class="fas fa-blog mr-2"></i>
+                    post_manager.py
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                        Blog Posts Management
+                    </h1>
+                    <p class="terminal-secondary">
+                        Create, edit, and manage your blog posts
+                    </p>
+                </div>
+                
+                <a href="{{ url_for('admin.new_post') }}" class="terminal-button">
+                    <i class="fas fa-plus mr-2"></i>
+                    New Post
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Posts List -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-primary text-sm font-bold">
+                <i class="fas fa-list mr-2"></i>
+                posts_database.db
+            </span>
+        </div>
+        
+        <div class="p-8">
+            {% if posts.items %}
+            <div class="space-y-4">
+                {% for post in posts.items %}
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all duration-300">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="text-xl font-bold terminal-primary">
+                                    {{ post.title }}
+                                </h3>
+                                
+                                <!-- Status Badge -->
+                                {% if post.is_published %}
+                                <span class="px-2 py-1 bg-green-400 text-black text-xs font-bold rounded">
+                                    <i class="fas fa-eye mr-1"></i>
+                                    Published
+                                </span>
+                                {% else %}
+                                <span class="px-2 py-1 bg-yellow-400 text-black text-xs font-bold rounded">
+                                    <i class="fas fa-edit mr-1"></i>
+                                    Draft
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <p class="terminal-text mb-3 leading-relaxed">
+                                {{ post.excerpt or (post.content[:200] + '...' if post.content|length > 200 else post.content) }}
+                            </p>
+                            
+                            <!-- Post Meta -->
+                            <div class="flex flex-wrap items-center gap-4 text-sm terminal-muted">
+                                <span>
+                                    <i class="fas fa-calendar mr-1"></i>
+                                    Created: {{ post.created_at.strftime('%Y-%m-%d') }}
+                                </span>
+                                {% if post.published_at %}
+                                <span>
+                                    <i class="fas fa-globe mr-1"></i>
+                                    Published: {{ post.published_at.strftime('%Y-%m-%d') }}
+                                </span>
+                                {% endif %}
+                                <span>
+                                    <i class="fas fa-clock mr-1"></i>
+                                    {{ post.reading_time }} min read
+                                </span>
+                                <span>
+                                    <i class="fas fa-eye mr-1"></i>
+                                    {{ post.view_count }} views
+                                </span>
+                                {% if post.tags %}
+                                <span>
+                                    <i class="fas fa-tags mr-1"></i>
+                                    {{ post.tags|length }} tag{{ 's' if post.tags|length != 1 else '' }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Tags -->
+                            {% if post.tags %}
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                {% for tag in post.tags %}
+                                <span class="px-2 py-1 bg-gray-800 text-xs terminal-secondary rounded">
+                                    #{{ tag.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col space-y-2 ml-6">
+                            <a href="{{ url_for('admin.edit_post', id=post.id) }}" 
+                               class="terminal-button text-sm px-3 py-2">
+                                <i class="fas fa-edit mr-1"></i>
+                                Edit
+                            </a>
+                            
+                            {% if post.is_published %}
+                            <a href="{{ url_for('blog.post', slug=post.slug) }}" 
+                               target="_blank"
+                               class="terminal-button text-sm px-3 py-2">
+                                <i class="fas fa-external-link-alt mr-1"></i>
+                                View
+                            </a>
+                            
+                            <a href="{{ url_for('admin.toggle_publish', id=post.id) }}" 
+                               class="terminal-button text-sm px-3 py-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400">
+                                <i class="fas fa-eye-slash mr-1"></i>
+                                Unpublish
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('admin.toggle_publish', id=post.id) }}" 
+                               class="terminal-button text-sm px-3 py-2 border-green-400 text-green-400 hover:bg-green-400">
+                                <i class="fas fa-eye mr-1"></i>
+                                Publish
+                            </a>
+                            {% endif %}
+                            
+                            <button onclick="confirmDelete('{{ post.id }}', '{{ post.title }}')" 
+                                    class="terminal-button text-sm px-3 py-2 border-red-400 text-red-400 hover:bg-red-400">
+                                <i class="fas fa-trash mr-1"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if posts.pages > 1 %}
+            <div class="mt-8 pt-6 border-t border-gray-700">
+                <div class="flex items-center justify-center space-x-4">
+                    {% if posts.has_prev %}
+                    <a href="{{ url_for('admin.posts', page=posts.prev_num) }}" 
+                       class="terminal-button">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Previous
+                    </a>
+                    {% endif %}
+                    
+                    <div class="flex items-center space-x-2">
+                        {% for page_num in posts.iter_pages() %}
+                            {% if page_num %}
+                                {% if page_num != posts.page %}
+                                <a href="{{ url_for('admin.posts', page=page_num) }}" 
+                                   class="px-3 py-2 bg-gray-800 text-sm terminal-text hover:terminal-primary transition-colors rounded">
+                                    {{ page_num }}
+                                </a>
+                                {% else %}
+                                <span class="px-3 py-2 bg-green-400 text-black text-sm font-bold rounded">
+                                    {{ page_num }}
+                                </span>
+                                {% endif %}
+                            {% else %}
+                            <span class="px-3 py-2 text-sm terminal-muted">…</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    {% if posts.has_next %}
+                    <a href="{{ url_for('admin.posts', page=posts.next_num) }}" 
+                       class="terminal-button">
+                        Next
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="text-center mt-4 text-sm terminal-muted">
+                    Page {{ posts.page }} of {{ posts.pages }} 
+                    ({{ posts.total }} total posts)
+                </div>
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-12">
+                <i class="fas fa-blog text-6xl terminal-muted mb-4"></i>
+                <h2 class="text-2xl font-bold terminal-primary mb-4">No Posts Yet</h2>
+                <p class="terminal-muted mb-6">
+                    Start building your blog by creating your first post.
+                </p>
+                <a href="{{ url_for('admin.new_post') }}" class="terminal-button">
+                    <i class="fas fa-plus mr-2"></i>
+                    Create Your First Post
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+    <div class="terminal-window max-w-md w-full mx-4">
+        <div class="terminal-header">
+            <span class="terminal-error text-sm font-bold">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                confirm_delete.exe
+            </span>
+        </div>
+        
+        <div class="p-8 text-center">
+            <i class="fas fa-trash text-6xl terminal-error mb-4"></i>
+            <h3 class="text-xl font-bold terminal-primary mb-4">Delete Post?</h3>
+            <p class="terminal-text mb-6">
+                Are you sure you want to delete "<span id="deletePostTitle" class="terminal-warning"></span>"?
+                This action cannot be undone.
+            </p>
+            
+            <div class="flex space-x-4 justify-center">
+                <button onclick="closeDeleteModal()" class="terminal-button">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancel
+                </button>
+                <a id="confirmDeleteLink" href="#" class="terminal-button border-red-400 text-red-400 hover:bg-red-400">
+                    <i class="fas fa-trash mr-2"></i>
+                    Delete Post
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Delete confirmation
+function confirmDelete(postId, postTitle) {
+    document.getElementById('deletePostTitle').textContent = postTitle;
+    document.getElementById('confirmDeleteLink').href = `/admin/posts/delete/${postId}`;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
+    }
+});
+
+// Close modal on backdrop click
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate post cards on scroll
+    const postCards = document.querySelectorAll('.border-gray-700');
+    
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.opacity = '1';
+                }, index * 100);
+            }
+        });
+    }, observerOptions);
+    
+    postCards.forEach(card => {
+        card.style.transform = 'translateY(20px)';
+        card.style.opacity = '0';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+    });
+});
+</script>
+{% endblock %}

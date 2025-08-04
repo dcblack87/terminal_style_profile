@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 min-h-screen flex items-center justify-center">
+    <div class="terminal-window max-w-md w-full">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-warning text-sm font-bold">
+                    <i class="fas fa-lock mr-2"></i>
+                    authentication.exe
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold terminal-primary neon-glow mb-4 typing">
+                    Access Control
+                </h1>
+                <p class="terminal-secondary">
+                    Administrator authentication required
+                </p>
+            </div>
+            
+            <!-- Terminal Prompt -->
+            <div class="bg-black rounded-lg p-6 mb-6">
+                <div class="text-sm font-mono">
+                    <div class="terminal-primary">{{ config.SITE_NAME.lower() }} login: <span class="animate-pulse">_</span></div>
+                    <div class="terminal-muted text-xs mt-2">Please provide valid credentials to continue.</div>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <form method="POST" class="space-y-6">
+                {{ form.hidden_tag() }}
+                
+                <!-- Username Field -->
+                <div>
+                    <label for="{{ form.username.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-user mr-2"></i>
+                        Username:
+                    </label>
+                    {{ form.username(class="w-full terminal-input") }}
+                    {% if form.username.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.username.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Password Field -->
+                <div>
+                    <label for="{{ form.password.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-key mr-2"></i>
+                        Password:
+                    </label>
+                    {{ form.password(class="w-full terminal-input") }}
+                    {% if form.password.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.password.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Remember Me -->
+                <div class="flex items-center">
+                    {{ form.remember_me(class="mr-2") }}
+                    <label for="{{ form.remember_me.id }}" class="text-sm terminal-text">
+                        Remember this session
+                    </label>
+                </div>
+                
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="w-full terminal-button">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Authenticate
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Security Notice -->
+            <div class="mt-8 p-4 border-l-4 border-yellow-400 bg-yellow-400/10">
+                <div class="flex">
+                    <i class="fas fa-shield-alt terminal-warning mr-3 mt-1"></i>
+                    <div class="text-sm">
+                        <div class="font-bold terminal-warning mb-1">Security Notice</div>
+                        <div class="terminal-text">
+                            This is a restricted area. Unauthorized access attempts are logged 
+                            and monitored. Only authorized personnel should proceed.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Back Link -->
+            <div class="text-center mt-6">
+                <a href="{{ url_for('main.index') }}" 
+                   class="terminal-secondary hover:terminal-primary transition-colors text-sm">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Return to Main Site
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const usernameInput = form.querySelector('input[name="username"]');
+    const passwordInput = form.querySelector('input[name="password"]');
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Terminal-style input effects
+    [usernameInput, passwordInput].forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.boxShadow = '0 0 15px rgba(0, 255, 0, 0.3)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.boxShadow = '';
+        });
+        
+        // Add typing sound effect (visual feedback)
+        input.addEventListener('input', function() {
+            this.style.borderColor = 'var(--terminal-primary)';
+            setTimeout(() => {
+                this.style.borderColor = '';
+            }, 200);
+        });
+    });
+    
+    // Form submission with loading state
+    form.addEventListener('submit', function(e) {
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Authenticating...';
+        submitButton.disabled = true;
+        
+        // Re-enable after timeout (in case of validation errors)
+        setTimeout(() => {
+            submitButton.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Authenticate';
+            submitButton.disabled = false;
+        }, 5000);
+    });
+    
+    // Focus first empty field
+    if (!usernameInput.value) {
+        usernameInput.focus();
+    } else if (!passwordInput.value) {
+        passwordInput.focus();
+    }
+    
+    // Enter key handling
+    usernameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            passwordInput.focus();
+        }
+    });
+    
+    // Enhanced security - clear form data on page unload
+    window.addEventListener('beforeunload', function() {
+        passwordInput.value = '';
+    });
+    
+    // Terminal-style authentication interface loaded
+});
+</script>
+
+<style>
+/* Custom checkbox styling for remember me */
+input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--terminal-border);
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    border-color: var(--terminal-primary);
+    background: var(--terminal-primary);
+}
+
+input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    left: 1px;
+    color: var(--terminal-bg);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+</style>
+{% endblock %}

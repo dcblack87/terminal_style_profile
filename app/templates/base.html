@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}{{ config.SITE_TAGLINE }}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}developer, programmer, full-stack, python, flask, terminal{% endblock %}">
+    <meta name="author" content="{{ config.SITE_NAME }}">
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <title>{% block title %}{{ config.SITE_NAME }}{% endblock %}</title>
+    
+    <!-- Tailwind CSS (compiled) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Terminal Styles -->
+    <style>
+        /* Terminal Color Scheme */
+        :root {
+            --terminal-bg: #000012;
+            --terminal-surface: #001122;
+            --terminal-primary: #00ff00;
+            --terminal-secondary: #0080ff;
+            --terminal-warning: #ffff00;
+            --terminal-error: #ff0040;
+            --terminal-text: #e0e0e0;
+            --terminal-muted: #888888;
+            --terminal-border: #003344;
+        }
+        
+        body {
+            background: var(--terminal-bg);
+            color: var(--terminal-text);
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+        
+        /* Terminal Window Effect */
+        .terminal-window {
+            background: var(--terminal-surface);
+            border: 2px solid var(--terminal-border);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+        
+        .terminal-header {
+            background: var(--terminal-border);
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--terminal-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .terminal-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .terminal-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .control-close { background: #ff5555; }
+        .control-minimize { background: #ffb86c; }
+        .control-maximize { background: #50fa7b; }
+        
+        /* Terminal Text Effects */
+        .terminal-text {
+            color: var(--terminal-text);
+        }
+        
+        .terminal-primary {
+            color: var(--terminal-primary);
+        }
+        
+        .terminal-secondary {
+            color: var(--terminal-secondary);
+        }
+        
+        .terminal-warning {
+            color: var(--terminal-warning);
+        }
+        
+        .terminal-error {
+            color: var(--terminal-error);
+        }
+        
+        .terminal-muted {
+            color: var(--terminal-muted);
+        }
+        
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate3d(0, 0, 0); }
+            10% { transform: translate3d(-1px, -1px, 0); }
+            20% { transform: translate3d(1px, 1px, 0); }
+            30% { transform: translate3d(-1px, 1px, 0); }
+            40% { transform: translate3d(1px, -1px, 0); }
+        }
+        
+        /* Typing Animation */
+        .typing::after {
+            content: '_';
+            animation: blink 1s infinite;
+            color: var(--terminal-primary);
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* Terminal Input Styles */
+        .terminal-input, .terminal-textarea {
+            background: transparent;
+            border: 1px solid var(--terminal-border);
+            color: var(--terminal-text);
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+        
+        .terminal-input:focus, .terminal-textarea:focus {
+            outline: none;
+            border-color: var(--terminal-primary);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        .terminal-input::placeholder, .terminal-textarea::placeholder {
+            color: var(--terminal-muted);
+        }
+        
+        /* Terminal Button Styles */
+        .terminal-button {
+            background: transparent;
+            border: 2px solid var(--terminal-primary);
+            color: var(--terminal-primary);
+            padding: 12px 24px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .terminal-button:hover {
+            background: var(--terminal-primary);
+            color: var(--terminal-bg);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+        
+        .terminal-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .terminal-button:hover::before {
+            left: 100%;
+        }
+        
+        /* Matrix Effect */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--terminal-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--terminal-primary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--terminal-secondary);
+        }
+        
+        /* Flash Messages */
+        .flash-message {
+            border-left: 4px solid;
+            padding: 12px 16px;
+            margin: 16px 0;
+            border-radius: 4px;
+        }
+        
+        .flash-success {
+            background: rgba(0, 255, 0, 0.1);
+            border-color: var(--terminal-primary);
+            color: var(--terminal-primary);
+        }
+        
+        .flash-error {
+            background: rgba(255, 0, 64, 0.1);
+            border-color: var(--terminal-error);
+            color: var(--terminal-error);
+        }
+        
+        .flash-warning {
+            background: rgba(255, 255, 0, 0.1);
+            border-color: var(--terminal-warning);
+            color: var(--terminal-warning);
+        }
+        
+        .flash-info {
+            background: rgba(0, 128, 255, 0.1);
+            border-color: var(--terminal-secondary);
+            color: var(--terminal-secondary);
+        }
+        
+        /* Loading Animation */
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--terminal-primary);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Neon Glow */
+        .neon-glow {
+            text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .terminal-window {
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            
+            body {
+                font-size: 14px;
+            }
+        }
+    </style>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="h-full bg-black text-gray-200">
+    <!-- Matrix Background Effect -->
+    <canvas id="matrix" class="matrix-bg"></canvas>
+    
+    <!-- Main Container -->
+    <div class="min-h-full flex flex-col">
+        <!-- Navigation -->
+        {% include 'components/navigation.html' %}
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mx-auto px-4 py-4">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Main Content -->
+        <main class="flex-1">
+            {% block content %}{% endblock %}
+        </main>
+        
+        <!-- Footer -->
+        {% include 'components/footer.html' %}
+    </div>
+    
+    <!-- JavaScript -->
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
+        const matrixArray = matrix.split("");
+        
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        
+        const drops = [];
+        for(let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 18, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.font = fontSize + 'px monospace';
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = matrixArray[Math.floor(Math.random() * matrixArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(draw, 35);
+        
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // CSRF Token for AJAX requests
+        function getCSRFToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }
+        
+        // Terminal command functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add typing effect to elements with typing class
+            const typingElements = document.querySelectorAll('.typing');
+            typingElements.forEach(element => {
+                let text = element.textContent;
+                element.textContent = '';
+                let i = 0;
+                
+                function typeWriter() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 50);
+                    }
+                }
+                
+                typeWriter();
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

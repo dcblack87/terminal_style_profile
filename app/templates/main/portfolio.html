@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Portfolio - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Explore my portfolio of innovative web applications and digital projects including CRM Baby, App Launcher, and Mix Convert Keyword.{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    portfolio/projects/
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8 text-center">
+            <h1 class="text-4xl font-bold terminal-primary neon-glow mb-4 typing">
+                Project Portfolio
+            </h1>
+            <p class="text-xl terminal-secondary mb-6">
+                A showcase of innovative digital solutions and cutting-edge applications
+            </p>
+            <div class="terminal-muted">
+                <i class="fas fa-terminal mr-2"></i>
+                ls -la projects/ | grep -E "(live|development|archived)"
+            </div>
+        </div>
+    </section>
+    
+    <!-- Project Grid -->
+    {% if portfolio_items %}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {% for item in portfolio_items %}
+        <article class="terminal-window hover:shadow-lg hover:shadow-green-400/20 transition-all duration-300">
+            <div class="terminal-header">
+                <div class="flex items-center space-x-4">
+                    <div class="terminal-controls">
+                        <div class="terminal-control control-close"></div>
+                        <div class="terminal-control control-minimize"></div>
+                        <div class="terminal-control control-maximize"></div>
+                    </div>
+                    <span class="terminal-primary text-sm font-bold">
+                        <i class="fas fa-code mr-2"></i>
+                        {{ item.title.lower().replace(' ', '_') }}.app
+                    </span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-1 text-xs rounded" 
+                          style="background-color: {{ item.status_color }}20; color: {{ item.status_color }};">
+                        <i class="fas fa-circle mr-1" style="font-size: 6px;"></i>
+                        {{ item.status.upper() }}
+                    </span>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- Project Image/Icon -->
+                <div class="mb-6">
+                    {% if item.image_url %}
+                    <img src="{{ item.image_url }}" alt="{{ item.title }}" 
+                         class="w-full h-48 object-cover rounded-lg border border-gray-700">
+                    {% else %}
+                    <div class="w-full h-48 bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center">
+                        <i class="fas fa-laptop-code text-6xl terminal-primary opacity-30"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Project Title & Description -->
+                <h2 class="text-2xl font-bold terminal-primary mb-3 neon-glow">
+                    {{ item.title }}
+                </h2>
+                <p class="terminal-text mb-4 leading-relaxed">
+                    {{ item.description }}
+                </p>
+                
+                <!-- Technologies -->
+                {% if item.technologies %}
+                <div class="mb-6">
+                    <h3 class="text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-tools mr-1"></i>
+                        Technologies:
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for tech in item.tech_list %}
+                        <span class="px-3 py-1 bg-gray-800 border border-gray-600 text-xs terminal-text rounded-full hover:border-green-400 transition-colors">
+                            {{ tech }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Project Links -->
+                <div class="flex flex-wrap gap-4 pt-4 border-t border-gray-700">
+                    {% if item.url %}
+                    <a href="{{ item.url }}" target="_blank" 
+                       class="terminal-button flex-1 text-center">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        Live Demo
+                    </a>
+                    {% endif %}
+                    
+                    {% if item.github_url %}
+                    <a href="{{ item.github_url }}" target="_blank" 
+                       class="terminal-button flex-1 text-center border-blue-400 text-blue-400 hover:bg-blue-400">
+                        <i class="fab fa-github mr-2"></i>
+                        Source Code
+                    </a>
+                    {% endif %}
+                    
+                    {% if not item.url and not item.github_url %}
+                    <div class="w-full text-center terminal-muted text-sm">
+                        <i class="fas fa-lock mr-2"></i>
+                        Private Repository
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Project Stats/Info -->
+                <div class="mt-4 pt-4 border-t border-gray-700 grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <span class="terminal-muted">Status:</span>
+                        <span class="terminal-primary ml-2">{{ item.status.title() }}</span>
+                    </div>
+                    <div>
+                        <span class="terminal-muted">Updated:</span>
+                        <span class="terminal-primary ml-2">{{ item.updated_at.strftime('%Y-%m-%d') }}</span>
+                    </div>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    
+    <!-- Portfolio Stats -->
+    <section class="terminal-window mt-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-chart-line mr-2"></i>
+                    portfolio_stats.json
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-2xl font-bold terminal-primary mb-6 text-center">
+                <i class="fas fa-analytics mr-2"></i>
+                Portfolio Statistics
+            </h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                        {{ portfolio_items|selectattr('status', 'equalto', 'live')|list|length }}
+                    </div>
+                    <div class="terminal-muted">Live Projects</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold terminal-warning neon-glow mb-2">
+                        {{ portfolio_items|selectattr('status', 'equalto', 'development')|list|length }}
+                    </div>
+                    <div class="terminal-muted">In Development</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold terminal-secondary neon-glow mb-2">
+                        {{ portfolio_items|length }}
+                    </div>
+                    <div class="terminal-muted">Total Projects</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold terminal-primary neon-glow mb-2">∞</div>
+                    <div class="terminal-muted">Ideas Brewing</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    {% else %}
+    <!-- Empty State -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-primary text-sm font-bold">
+                <i class="fas fa-folder-open mr-2"></i>
+                empty_directory.txt
+            </span>
+        </div>
+        
+        <div class="p-8 text-center">
+            <i class="fas fa-folder-open text-6xl terminal-muted mb-4"></i>
+            <h2 class="text-2xl font-bold terminal-primary mb-4">No Projects Found</h2>
+            <p class="terminal-muted">
+                Projects are currently being initialized...
+            </p>
+            <div class="mt-6">
+                <a href="{{ url_for('main.contact') }}" class="terminal-button">
+                    <i class="fas fa-envelope mr-2"></i>
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- Call to Action -->
+    <section class="terminal-window mt-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-handshake mr-2"></i>
+                    collaboration.md
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8 text-center">
+            <h2 class="text-3xl font-bold terminal-primary neon-glow mb-4">
+                Let's Build Something Amazing Together
+            </h2>
+            <p class="text-lg terminal-text mb-6 max-w-2xl mx-auto">
+                Have a project in mind? Looking for a technical co-founder or development partner? 
+                I'm always interested in collaborating on innovative ideas and challenging problems.
+            </p>
+            
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="{{ url_for('main.contact') }}" class="terminal-button">
+                    <i class="fas fa-rocket mr-2"></i>
+                    Start a Project
+                </a>
+                <a href="{{ url_for('blog.index') }}" class="terminal-button">
+                    <i class="fas fa-blog mr-2"></i>
+                    Read My Blog
+                </a>
+                <a href="{{ config.GITHUB_URL }}" target="_blank" class="terminal-button">
+                    <i class="fab fa-github mr-2"></i>
+                    View GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to project cards
+    const projectCards = document.querySelectorAll('article.terminal-window');
+    
+    projectCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Animate stats on scroll
+    const stats = document.querySelectorAll('.neon-glow');
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'pulse 2s infinite';
+            }
+        });
+    }, observerOptions);
+    
+    stats.forEach(stat => observer.observe(stat));
+});
+</script>
+
+<style>
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,170 @@
+<!-- Terminal Footer -->
+<footer class="terminal-window mx-4 mb-4 mt-8">
+    <div class="p-6 border-b border-gray-700">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- About Section -->
+            <div>
+                <h3 class="terminal-primary font-bold mb-4 flex items-center">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    about.sh
+                </h3>
+                <p class="terminal-muted text-sm leading-relaxed">
+                    {{ config.SITE_TAGLINE }}<br>
+                    Full-stack developer creating innovative digital experiences
+                    with cutting-edge technology and clean code.
+                </p>
+                <div class="mt-4">
+                    <span class="terminal-secondary text-xs">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        The Internet • Available Globally
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h3 class="terminal-primary font-bold mb-4 flex items-center">
+                    <i class="fas fa-link mr-2"></i>
+                    quick_links.json
+                </h3>
+                <ul class="space-y-2 text-sm">
+                    <li>
+                        <a href="{{ url_for('main.index') }}" class="terminal-text hover:terminal-primary transition-colors">
+                            <i class="fas fa-angle-right mr-2"></i>
+                            home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.portfolio') }}" class="terminal-text hover:terminal-primary transition-colors">
+                            <i class="fas fa-angle-right mr-2"></i>
+                            portfolio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('blog.index') }}" class="terminal-text hover:terminal-primary transition-colors">
+                            <i class="fas fa-angle-right mr-2"></i>
+                            blog
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.contact') }}" class="terminal-text hover:terminal-primary transition-colors">
+                            <i class="fas fa-angle-right mr-2"></i>
+                            contact
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('main.terminal') }}" class="terminal-text hover:terminal-primary transition-colors">
+                            <i class="fas fa-angle-right mr-2"></i>
+                            terminal
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Social & Contact -->
+            <div>
+                <h3 class="terminal-primary font-bold mb-4 flex items-center">
+                    <i class="fas fa-network-wired mr-2"></i>
+                    connections.cfg
+                </h3>
+                
+                <!-- Social Links -->
+                <div class="flex space-x-4 mb-4">
+                    {% if config.GITHUB_URL %}
+                    <a href="{{ config.GITHUB_URL }}" target="_blank" 
+                       class="terminal-secondary hover:terminal-primary hover:neon-glow transition-all group" 
+                       title="GitHub">
+                        <i class="fab fa-github text-xl group-hover:scale-110 transition-transform"></i>
+                    </a>
+                    {% endif %}
+                    
+                    {% if config.TWITTER_URL %}
+                    <a href="{{ config.TWITTER_URL }}" target="_blank" 
+                       class="terminal-secondary hover:terminal-primary hover:neon-glow transition-all group" 
+                       title="Twitter">
+                        <i class="fab fa-twitter text-xl group-hover:scale-110 transition-transform"></i>
+                    </a>
+                    {% endif %}
+                    
+                    {% if config.LINKEDIN_URL %}
+                    <a href="{{ config.LINKEDIN_URL }}" target="_blank" 
+                       class="terminal-secondary hover:terminal-primary hover:neon-glow transition-all group" 
+                       title="LinkedIn">
+                        <i class="fab fa-linkedin text-xl group-hover:scale-110 transition-transform"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Status -->
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-center">
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                        <span class="terminal-primary">Status: Online</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                        <span class="terminal-secondary">Mode: Development</span>
+                    </div>
+                </div>
+                
+                <!-- Current Projects -->
+                <div class="mt-4">
+                    <p class="terminal-muted text-xs">
+                        <i class="fas fa-code mr-1"></i>
+                        Currently working on operation freedom
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Terminal Command Line -->
+    <div class="terminal-header bg-opacity-50 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+            <span class="terminal-primary text-sm">
+                <i class="fas fa-terminal mr-2"></i>
+                © {{ current_year }} {{ config.SITE_NAME }}
+            </span>
+            <span class="terminal-muted text-xs hidden sm:inline">
+                Built with Flask • Powered by Python • Styled with Tailwind
+            </span>
+        </div>
+        
+        <!-- Terminal Prompt -->
+        <div class="terminal-muted text-xs">
+            user@{{ config.SITE_NAME.lower() }}:~$ _
+        </div>
+    </div>
+</footer>
+
+<!-- Footer JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Terminal timestamp update
+    function updateTimestamp() {
+        const timestamp = new Date().toLocaleTimeString();
+        const terminalPrompts = document.querySelectorAll('.terminal-muted');
+        terminalPrompts.forEach(prompt => {
+            if (prompt.textContent.includes('user@')) {
+                // Keep the original prompt but could add timestamp if needed
+            }
+        });
+    }
+    
+    // Update every minute
+    setInterval(updateTimestamp, 60000);
+});
+
+// Helper function for year (since moment.js isn't included)
+function getCurrentYear() {
+    return new Date().getFullYear();
+}
+
+// Replace moment().year in template
+document.addEventListener('DOMContentLoaded', function() {
+    const yearElements = document.querySelectorAll('[data-current-year]');
+    yearElements.forEach(element => {
+        element.textContent = getCurrentYear();
+    });
+});
+</script>

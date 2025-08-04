@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}{% if tag %}Edit Tag{% else %}New Tag{% endif %} - Admin - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <section class="terminal-window mb-8">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-warning text-sm font-bold">
+                    <i class="fas fa-tag mr-2"></i>
+                    {% if tag %}edit_tag.py{% else %}new_tag.py{% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                        {% if tag %}Edit Tag{% else %}Create New Tag{% endif %}
+                    </h1>
+                    <p class="terminal-secondary">
+                        {% if tag %}Modify tag properties{% else %}Add a new tag for organizing posts{% endif %}
+                    </p>
+                </div>
+                
+                <a href="{{ url_for('admin.tags') }}" class="terminal-button">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Tags
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Tag Form -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-primary text-sm font-bold">
+                <i class="fas fa-tag mr-2"></i>
+                tag_properties.json
+            </span>
+        </div>
+        
+        <div class="p-8">
+            <form method="POST" class="space-y-6">
+                {{ form.hidden_tag() }}
+                
+                <!-- Tag Name -->
+                <div>
+                    <label for="{{ form.name.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-hashtag mr-2"></i>
+                        Tag Name:
+                    </label>
+                    {{ form.name(class="w-full terminal-input") }}
+                    {% if form.name.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.name.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="mt-2 text-xs terminal-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Short, descriptive name for the tag (e.g., "Python", "Tutorial", "Web Dev")
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div>
+                    <label for="{{ form.description.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-align-left mr-2"></i>
+                        Description:
+                    </label>
+                    {{ form.description(class="w-full terminal-textarea") }}
+                    {% if form.description.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.description.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="mt-2 text-xs terminal-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Optional: Brief description of what this tag represents
+                    </div>
+                </div>
+                
+                <!-- Color -->
+                <div>
+                    <label for="{{ form.color.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-palette mr-2"></i>
+                        Color:
+                    </label>
+                    <div class="flex items-center space-x-4">
+                        {{ form.color(class="terminal-input w-32", type="color") }}
+                        <div class="flex items-center space-x-2">
+                            <span class="terminal-muted text-sm">Preview:</span>
+                            <div id="colorPreview" class="px-3 py-1 rounded text-sm font-bold" style="background-color: {{ tag.color if tag else '#00ff00' }}20; color: {{ tag.color if tag else '#00ff00' }};">
+                                #{{ tag.name if tag else 'TagName' }}
+                            </div>
+                        </div>
+                    </div>
+                    {% if form.color.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.color.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="mt-2 text-xs terminal-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Color used for displaying the tag in the interface
+                    </div>
+                </div>
+                
+                <!-- Predefined Colors -->
+                <div class="border-t border-gray-700 pt-6">
+                    <h3 class="text-sm font-bold terminal-secondary mb-3">
+                        <i class="fas fa-swatchbook mr-2"></i>
+                        Quick Colors:
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="setColor('#00ff00')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #00ff00" title="Terminal Green"></button>
+                        <button type="button" onclick="setColor('#0080ff')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #0080ff" title="Cyber Blue"></button>
+                        <button type="button" onclick="setColor('#ff0040')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #ff0040" title="Error Red"></button>
+                        <button type="button" onclick="setColor('#ffff00')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #ffff00" title="Warning Yellow"></button>
+                        <button type="button" onclick="setColor('#ff8800')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #ff8800" title="Orange"></button>
+                        <button type="button" onclick="setColor('#8800ff')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #8800ff" title="Purple"></button>
+                        <button type="button" onclick="setColor('#00ff80')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #00ff80" title="Mint Green"></button>
+                        <button type="button" onclick="setColor('#ff0080')" class="w-8 h-8 rounded border-2 border-gray-600 hover:border-white transition-colors" style="background-color: #ff0080" title="Pink"></button>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-4 pt-6 border-t border-gray-700">
+                    <button type="submit" class="terminal-button">
+                        <i class="fas fa-save mr-2"></i>
+                        {% if tag %}Update Tag{% else %}Create Tag{% endif %}
+                    </button>
+                    
+                    {% if tag %}
+                    <a href="{{ url_for('blog.tag', slug=tag.slug) }}" target="_blank" class="terminal-button">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        View Posts with Tag
+                    </a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('admin.tags') }}" class="terminal-secondary hover:terminal-primary transition-colors">
+                        <i class="fas fa-times mr-2"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const colorInput = form.querySelector('input[name="color"]');
+    const nameInput = form.querySelector('input[name="name"]');
+    const colorPreview = document.getElementById('colorPreview');
+    
+    // Update color preview
+    function updateColorPreview() {
+        const color = colorInput.value;
+        const name = nameInput.value || 'TagName';
+        
+        colorPreview.style.backgroundColor = color + '20';
+        colorPreview.style.color = color;
+        colorPreview.textContent = '#' + name;
+    }
+    
+    // Set color from quick buttons
+    window.setColor = function(color) {
+        colorInput.value = color;
+        updateColorPreview();
+    };
+    
+    // Update preview on input changes
+    colorInput.addEventListener('input', updateColorPreview);
+    nameInput.addEventListener('input', updateColorPreview);
+    
+    // Initial preview update
+    updateColorPreview();
+    
+    // Auto-resize description textarea
+    const descriptionTextarea = form.querySelector('textarea[name="description"]');
+    if (descriptionTextarea) {
+        function autoResize() {
+            descriptionTextarea.style.height = 'auto';
+            descriptionTextarea.style.height = Math.max(80, descriptionTextarea.scrollHeight) + 'px';
+        }
+        
+        descriptionTextarea.addEventListener('input', autoResize);
+        autoResize();
+    }
+    
+    // Form submission with loading state
+    form.addEventListener('submit', function() {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+        submitBtn.disabled = true;
+        
+        // Reset after timeout if form hasn't redirected
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }, 5000);
+    });
+});
+</script>
+
+<style>
+/* Custom color input styling */
+input[type="color"] {
+    appearance: none;
+    border: 2px solid var(--terminal-border);
+    border-radius: 4px;
+    width: 8rem;
+    height: 3rem;
+    cursor: pointer;
+    background: transparent;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border: none;
+    border-radius: 2px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 2px;
+}
+
+input[type="color"]:focus {
+    outline: none;
+    border-color: var(--terminal-primary);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+</style>
+{% endblock %}

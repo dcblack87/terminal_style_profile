@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Portfolio - Admin - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <section class="terminal-window mb-8">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-warning text-sm font-bold">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    portfolio_manager.py
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                        Portfolio Management
+                    </h1>
+                    <p class="terminal-secondary">
+                        Manage your projects and showcase items
+                    </p>
+                </div>
+                
+                <a href="{{ url_for('admin.new_portfolio_item') }}" class="terminal-button">
+                    <i class="fas fa-plus mr-2"></i>
+                    New Project
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Portfolio Items -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-primary text-sm font-bold">
+                <i class="fas fa-database mr-2"></i>
+                projects.json
+            </span>
+        </div>
+        
+        <div class="p-8">
+            {% if items %}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {% for item in items %}
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <h3 class="text-xl font-bold terminal-primary">{{ item.title }}</h3>
+                            {% if item.is_featured %}
+                            <span class="px-2 py-1 bg-yellow-400 text-black text-xs font-bold rounded">
+                                <i class="fas fa-star mr-1"></i>
+                                Featured
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <span class="px-2 py-1 text-xs rounded" 
+                              style="background-color: {{ item.status_color }}20; color: {{ item.status_color }};">
+                            {{ item.status.title() }}
+                        </span>
+                    </div>
+                    
+                    <p class="terminal-text mb-4 leading-relaxed">
+                        {{ item.description }}
+                    </p>
+                    
+                    <!-- Technologies -->
+                    {% if item.technologies %}
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2">
+                            {% for tech in item.tech_list %}
+                            <span class="px-2 py-1 bg-gray-800 text-xs terminal-secondary rounded">
+                                {{ tech }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Links -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% if item.url %}
+                        <a href="{{ item.url }}" target="_blank" 
+                           class="text-sm terminal-primary hover:neon-glow transition-all">
+                            <i class="fas fa-external-link-alt mr-1"></i>
+                            Live Demo
+                        </a>
+                        {% endif %}
+                        {% if item.github_url %}
+                        <a href="{{ item.github_url }}" target="_blank" 
+                           class="text-sm terminal-secondary hover:neon-glow transition-all">
+                            <i class="fab fa-github mr-1"></i>
+                            Source
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Meta -->
+                    <div class="text-xs terminal-muted mb-4">
+                        Created: {{ item.created_at.strftime('%Y-%m-%d') }} • 
+                        Sort Order: {{ item.sort_order }}
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex space-x-2">
+                        <a href="{{ url_for('admin.edit_portfolio_item', id=item.id) }}" 
+                           class="terminal-button text-sm px-3 py-2">
+                            <i class="fas fa-edit mr-1"></i>
+                            Edit
+                        </a>
+                        
+                        <button onclick="confirmDelete('{{ item.id }}', '{{ item.title }}')" 
+                                class="terminal-button text-sm px-3 py-2 border-red-400 text-red-400 hover:bg-red-400">
+                            <i class="fas fa-trash mr-1"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-12">
+                <i class="fas fa-folder-open text-6xl terminal-muted mb-4"></i>
+                <h2 class="text-2xl font-bold terminal-primary mb-4">No Projects Yet</h2>
+                <p class="terminal-muted mb-6">
+                    Add your first project to start building your portfolio.
+                </p>
+                <a href="{{ url_for('admin.new_portfolio_item') }}" class="terminal-button">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add Your First Project
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+    <div class="terminal-window max-w-md w-full mx-4">
+        <div class="terminal-header">
+            <span class="terminal-error text-sm font-bold">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                confirm_delete.exe
+            </span>
+        </div>
+        
+        <div class="p-8 text-center">
+            <i class="fas fa-trash text-6xl terminal-error mb-4"></i>
+            <h3 class="text-xl font-bold terminal-primary mb-4">Delete Project?</h3>
+            <p class="terminal-text mb-6">
+                Are you sure you want to delete "<span id="deleteItemTitle" class="terminal-warning"></span>"?
+                This action cannot be undone.
+            </p>
+            
+            <div class="flex space-x-4 justify-center">
+                <button onclick="closeDeleteModal()" class="terminal-button">
+                    <i class="fas fa-times mr-2"></i>
+                    Cancel
+                </button>
+                <a id="confirmDeleteLink" href="#" class="terminal-button border-red-400 text-red-400 hover:bg-red-400">
+                    <i class="fas fa-trash mr-2"></i>
+                    Delete Project
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Delete confirmation
+function confirmDelete(itemId, itemTitle) {
+    document.getElementById('deleteItemTitle').textContent = itemTitle;
+    document.getElementById('confirmDeleteLink').href = `/admin/portfolio/delete/${itemId}`;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
+    }
+});
+
+// Close modal on backdrop click
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate portfolio cards
+    const portfolioCards = document.querySelectorAll('.border-gray-700');
+    
+    portfolioCards.forEach((card, index) => {
+        card.style.transform = 'translateY(20px)';
+        card.style.opacity = '0';
+        card.style.transition = 'all 0.6s ease';
+        
+        setTimeout(() => {
+            card.style.transform = 'translateY(0)';
+            card.style.opacity = '1';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}

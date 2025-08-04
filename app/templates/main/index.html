@@ -1,0 +1,742 @@
+{% extends "base.html" %}
+
+{% block title %}{{ config.SITE_NAME }} - {{ config.SITE_TAGLINE }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Hero Section -->
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-user-circle mr-2"></i>
+                    profile.exe
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <!-- Profile Image -->
+                <div class="flex justify-center lg:justify-start">
+                    <div class="relative">
+                        <img src="{{ config.PROFILE_IMAGE_URL }}" 
+                             alt="Profile Picture" 
+                             class="w-48 h-48 rounded-full border-4 border-green-400 shadow-lg hover:shadow-green-400/50 transition-all duration-300">
+                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-black text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hero Text -->
+                <div class="lg:col-span-2 text-center lg:text-left">
+                    <h1 class="text-4xl lg:text-6xl font-bold mb-4">
+                        <span class="terminal-primary neon-glow typing">{{ config.SITE_NAME }}</span>
+                    </h1>
+                    <p class="text-xl lg:text-2xl mb-6 terminal-secondary">
+                        {{ config.SITE_TAGLINE }}
+                    </p>
+                    <p class="text-lg mb-8 terminal-text leading-relaxed">
+                        Hey there! Welcome to my terminal. 
+                        I'm David a full-stack founder making apps from Thailand. 
+                        Checkout my current projects and let's connect on X.
+  
+                    </p>
+                    
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                        <a href="{{ url_for('main.portfolio') }}" class="terminal-button">
+                            <i class="fas fa-folder-open mr-2"></i>
+                            View Portfolio
+                        </a>
+                        <a href="{{ url_for('main.contact') }}" class="terminal-button">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Get In Touch
+                        </a>
+                        <a href="{{ url_for('main.terminal') }}" class="terminal-button">
+                            <i class="fas fa-terminal mr-2"></i>
+                            Open Terminal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats/Skills Section -->
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-chart-bar mr-2"></i>
+                    system_stats.py
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-3xl font-bold terminal-primary neon-glow mb-2">{{ portfolio_items|length }}+</div>
+                    <div class="terminal-muted">Active Projects</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold terminal-secondary neon-glow mb-2" id="total-repos">
+                        <i class="fas fa-spinner fa-spin text-2xl"></i>
+                    </div>
+                    <div class="terminal-muted">Total Repos</div>
+                </div>
+                <div class="text-center">
+                    <a href="{{ config.GITHUB_URL }}" target="_blank" class="block hover:scale-105 transition-transform">
+                        <div class="text-3xl font-bold terminal-warning neon-glow mb-2" id="commits-count">
+                            <i class="fas fa-spinner fa-spin text-2xl"></i>
+                        </div>
+                        <div class="terminal-muted" id="commit-period">
+                            Commits This Month
+                        </div>
+                        <div class="text-xs terminal-secondary mt-1">
+                            <i class="fas fa-external-link-alt mr-1"></i>
+                            View on GitHub
+                        </div>
+                    </a>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold terminal-primary neon-glow mb-2">24/7</div>
+                    <div class="terminal-muted">Always Learning</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Projects -->
+    {% if portfolio_items %}
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-rocket mr-2"></i>
+                    featured_projects.json
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-2xl font-bold terminal-primary mb-6 text-center">
+                <i class="fas fa-star mr-2"></i>
+                Featured Projects
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for item in portfolio_items[:3] %}
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold terminal-primary">{{ item.title }}</h3>
+                        <span class="px-2 py-1 text-xs rounded" style="background-color: {{ item.status_color }}20; color: {{ item.status_color }};">
+                            {{ item.status.title() }}
+                        </span>
+                    </div>
+                    
+                    <p class="terminal-text mb-4 text-sm leading-relaxed">
+                        {{ item.description }}
+                    </p>
+                    
+                    {% if item.technologies %}
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2">
+                            {% for tech in item.tech_list %}
+                            <span class="px-2 py-1 bg-gray-800 text-xs terminal-secondary rounded">
+                                {{ tech }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="flex space-x-4">
+                        {% if item.url %}
+                        <a href="{{ item.url }}" target="_blank" 
+                           class="terminal-primary hover:neon-glow transition-all text-sm">
+                            <i class="fas fa-external-link-alt mr-1"></i>
+                            Live Demo
+                        </a>
+                        {% endif %}
+                        {% if item.github_url %}
+                        <a href="{{ item.github_url }}" target="_blank" 
+                           class="terminal-secondary hover:neon-glow transition-all text-sm">
+                            <i class="fab fa-github mr-1"></i>
+                            Source
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="{{ url_for('main.portfolio') }}" class="terminal-button">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    View All Projects
+                </a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- Latest Blog Posts -->
+    {% if latest_posts %}
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-blog mr-2"></i>
+                    recent_posts.log
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-2xl font-bold terminal-primary mb-6 text-center">
+                <i class="fas fa-newspaper mr-2"></i>
+                Latest from the Terminal
+            </h2>
+            
+            <div class="space-y-6">
+                {% for post in latest_posts %}
+                <article class="border-l-4 border-green-400 pl-6 py-4 hover:bg-gray-900/30 transition-all duration-300">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xl font-bold terminal-primary hover:neon-glow">
+                            <a href="{{ url_for('blog.post', slug=post.slug) }}">
+                                {{ post.title }}
+                            </a>
+                        </h3>
+                        <span class="terminal-muted text-sm">
+                            {{ post.published_at.strftime('%Y-%m-%d') if post.published_at }}
+                        </span>
+                    </div>
+                    
+                    <p class="terminal-text mb-3 leading-relaxed">
+                        {{ post.excerpt or (post.content[:200] + '...' if post.content|length > 200 else post.content) }}
+                    </p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4 text-sm terminal-muted">
+                            <span>
+                                <i class="fas fa-clock mr-1"></i>
+                                {{ post.reading_time }} min read
+                            </span>
+                            <span>
+                                <i class="fas fa-eye mr-1"></i>
+                                {{ post.view_count }} views
+                            </span>
+                        </div>
+                        
+                        <a href="{{ url_for('blog.post', slug=post.slug) }}" 
+                           class="terminal-secondary hover:terminal-primary transition-colors text-sm">
+                            Read More →
+                        </a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="{{ url_for('blog.index') }}" class="terminal-button">
+                    <i class="fas fa-blog mr-2"></i>
+                    View All Posts
+                </a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    
+    <!-- Terminal Command Section -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-terminal mr-2"></i>
+                    interactive_terminal.sh
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-2xl font-bold terminal-primary mb-6 text-center">
+                <i class="fas fa-keyboard mr-2"></i>
+                Quick Access Terminal
+            </h2>
+            
+            <div class="bg-black rounded-lg p-6 border border-gray-700">
+                <div class="mb-4">
+                    <span class="terminal-primary">user@terminal:~$</span>
+                    <span class="terminal-muted"> Type 'help' for available commands</span>
+                </div>
+                
+                <div id="terminal-output" class="mb-4 min-h-32 max-h-64 overflow-y-auto terminal-text text-sm"></div>
+                
+                <div class="flex items-center">
+                    <span class="terminal-primary mr-2">$</span>
+                    <input type="text" id="terminal-input" 
+                           class="flex-1 bg-transparent border-none outline-none terminal-text font-mono"
+                           placeholder="Enter command..."
+                           autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="text-center mt-6">
+                <a href="{{ url_for('main.terminal') }}" class="terminal-button">
+                    <i class="fas fa-expand mr-2"></i>
+                    Open Full Terminal
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load GitHub stats asynchronously if not already loaded
+    const commitsElement = document.getElementById('commits-count');
+    if (commitsElement && commitsElement.innerHTML.includes('fa-spinner')) {
+        loadGitHubStats();
+    }
+    
+    // Function to load GitHub stats
+    async function loadGitHubStats() {
+        try {
+            const response = await fetch('/api/github/stats');
+            const data = await response.json();
+            
+            if (data.commits && data.commits.count > 0) {
+                const commitsCount = document.getElementById('commits-count');
+                const commitsMonth = commitsCount.nextElementSibling;
+                
+                commitsCount.innerHTML = data.commits.count + '+';
+                commitsMonth.innerHTML = `Commits in ${data.commits.month}`;
+                
+                // Add click to view GitHub link
+                const githubLink = commitsCount.parentElement;
+                if (!githubLink.querySelector('.terminal-secondary')) {
+                    const linkText = document.createElement('div');
+                    linkText.className = 'text-xs terminal-secondary mt-1';
+                    linkText.innerHTML = '<i class="fas fa-external-link-alt mr-1"></i>View on GitHub';
+                    githubLink.appendChild(linkText);
+                }
+            }
+        } catch (error) {
+            // Fallback to static display
+            const commitsElement = document.getElementById('commits-count');
+            if (commitsElement) {
+                commitsElement.innerHTML = '100+';
+            }
+        }
+    }
+    // Full terminal functionality (same as main terminal)
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalOutput = document.getElementById('terminal-output');
+    
+    let commandHistory = [];
+    let historyIndex = -1;
+    let isProcessing = false;
+    
+    // Terminal commands and responses (same as full terminal)
+    const commands = {
+        help: {
+            output: [
+                'Available commands:',
+                '',
+                '  help      - Show this help message',
+                '  about     - Display information about David',
+                '  portfolio - List my projects and applications',
+                '  blog      - Show recent blog posts',
+                '  contact   - Display contact information',
+                '  social    - Show social media links',
+                '  skills    - List my technical skills',
+                '  whoami    - Display current user info',
+                '  ls        - List available sections',
+                '  history   - Show command history',
+                '  clear     - Clear the terminal',
+                '  exit      - Go to full terminal',
+                '',
+                'Type any command and press Enter to execute.',
+                'Use ↑/↓ arrows to navigate command history.'
+            ]
+        },
+        about: {
+            output: [
+                'About {{ config.SITE_NAME }}',
+                '========================',
+                '',
+                'Full-Stack Developer & Digital Architect',
+                '{{ config.SITE_TAGLINE }}',
+                '',
+                'I specialize in building innovative web applications',
+                'and digital experiences with clean, maintainable code.',
+                '',
+                'Current focus areas:',
+                '• Web Application Development',
+                '• AI/ML Integration',
+                '• Cloud Architecture',
+                '• User Experience Design',
+                '',
+                'Always learning, always building, always improving.'
+            ]
+        },
+        portfolio: {
+            output: [
+                'Active Projects:',
+                '================',
+                '',
+                '1. CRM Baby (https://www.crmbaby.com)',
+                '   → Advanced Customer Relationship Management',
+                '   → Technologies: Python, Flask, AI/ML, PostgreSQL',
+                '   → Status: Live & Active Development',
+                '',
+                '2. App Launcher (https://www.applauncher.io)',
+                '   → Streamlined Application Deployment Platform',
+                '   → Technologies: Docker, Kubernetes, React, Node.js',
+                '   → Status: Live & Scaling',
+                '',
+                '3. Mix Convert Keyword (https://www.mix-convert-keyword.com)',
+                '   → AI-Powered Keyword Research & Optimization',
+                '   → Technologies: Python, NLP, Vue.js, Redis',
+                '   → Status: Live & Optimizing',
+                '',
+                'For detailed project information, visit: /portfolio'
+            ]
+        },
+        blog: {
+            output: [
+                'Recent Blog Posts:',
+                '==================',
+                '',
+                'Loading recent posts...'
+            ],
+            async: true
+        },
+        contact: {
+            output: [
+                'Contact Information:',
+                '===================',
+                '',
+                '📧 Email: Use contact form at /contact',
+                '🐙 GitHub: {{ config.GITHUB_URL }}',
+                '🐦 Twitter: {{ config.TWITTER_URL }}',
+                '💼 LinkedIn: {{ config.LINKEDIN_URL }}',
+                '',
+                '📍 Location: Remote (Available Globally)',
+                '⏰ Response Time: 24-48 hours',
+                '🤝 Collaboration: Remote & On-site',
+                '',
+                'Ready to discuss your project? Get in touch!'
+            ]
+        },
+        skills: {
+            output: [
+                'Core Expertise & Experience:',
+                '============================',
+                '',
+                '💻 Full-Stack Development:',
+                '   • Python Flask Framework',
+                '   • SQLAlchemy ORM & Database Design',
+                '   • HTML5 & Responsive Design',
+                '   • Tailwind CSS Styling',
+                '   • Server Management & Deployment',
+                '',
+                '🤖 AI & Innovation:',
+                '   • AI Integration & Implementation',
+                '   • Business Process Automation',
+                '   • Data-Driven Solutions',
+                '   • Technology Strategy',
+                '',
+                '📈 Marketing Excellence (15 Years):',
+                '   • Google Ads Partner Certified',
+                '   • PPC Campaign Management',
+                '   • Digital Marketing Strategy',
+                '   • Conversion Optimization',
+                '   • Performance Marketing',
+                '',
+                '🚀 Founder & Business Leadership:',
+                '   • Full-Stack Founder Experience',
+                '   • 15 Years PPC Agency Owner',
+                '   • Brand Development & Strategy',
+                '   • Go-to-Market Strategy',
+                '   • Customer Acquisition & Growth',
+                '',
+                '🎯 Strategic Expertise:',
+                '   • Technical Architecture',
+                '   • Business Development',
+                '   • Product Strategy',
+                '   • Innovation Implementation',
+                '   • Digital Strategy Consulting'
+            ]
+        },
+        social: {
+            output: [
+                'Social Media & Links:',
+                '=====================',
+                '',
+                '🐙 GitHub: {{ config.GITHUB_URL }}',
+                '   → Open source contributions & repositories',
+                '',
+                '🐦 Twitter: {{ config.TWITTER_URL }}',
+                '   → Tech insights, updates, and thoughts',
+                '',
+                '💼 LinkedIn: {{ config.LINKEDIN_URL }}',
+                '   → Professional network and career updates',
+                '',
+                'Follow me for the latest updates on projects,',
+                'technology insights, and development tips!'
+            ]
+        },
+        whoami: {
+            output: [
+                'guest@{{ config.SITE_NAME.lower() }}.dev',
+                '',
+                'You are currently browsing the interactive terminal',
+                'of a Full-Stack Developer and Digital Architect.',
+                '',
+                'User privileges: guest',
+                'Location: {{ config.SITE_NAME }} Terminal Interface',
+                'Session: Active',
+                'Access level: Public'
+            ]
+        },
+        ls: {
+            output: [
+                'Available sections:',
+                '',
+                'drwxr-xr-x  about/',
+                'drwxr-xr-x  portfolio/',
+                'drwxr-xr-x  blog/',
+                'drwxr-xr-x  contact/',
+                'drwxr-xr-x  terminal/',
+                '-rw-r--r--  skills.txt',
+                '-rw-r--r--  social.md',
+                '-rw-r--r--  README.md',
+                '',
+                'Use specific commands to explore each section.'
+            ]
+        },
+        history: {
+            output: []
+        },
+        clear: {
+            clear: true
+        },
+        exit: {
+            output: [
+                'Opening full terminal interface...',
+                'Redirecting in 2 seconds...'
+            ],
+            redirect: '{{ url_for("main.terminal") }}'
+        }
+    };
+    
+    // Add output to terminal
+    function addOutput(text, className = 'terminal-text') {
+        const line = document.createElement('div');
+        line.className = className;
+        
+        if (text === '') {
+            line.innerHTML = '&nbsp;';
+        } else {
+            line.textContent = text;
+        }
+        
+        terminalOutput.appendChild(line);
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+    
+    // Clear terminal
+    function clearTerminal() {
+        terminalOutput.innerHTML = '';
+    }
+    
+    // Process command
+    async function processCommand(cmd) {
+        const command = cmd.toLowerCase().trim();
+        
+        // Add command to history
+        if (command && commandHistory[0] !== command) {
+            commandHistory.unshift(command);
+            if (commandHistory.length > 50) {
+                commandHistory.pop();
+            }
+        }
+        historyIndex = -1;
+        
+        // Display command
+        addOutput(`$ ${cmd}`, 'terminal-primary');
+        
+        // Handle special cases
+        if (command === 'clear') {
+            clearTerminal();
+            return;
+        }
+        
+        if (command === 'history') {
+            addOutput('Command history:', 'terminal-secondary');
+            addOutput('');
+            commandHistory.slice(0, 10).forEach((histCmd, index) => {
+                addOutput(`${index + 1}. ${histCmd}`, 'terminal-text');
+            });
+            return;
+        }
+        
+        // Handle regular commands
+        if (commands[command]) {
+            const cmdData = commands[command];
+            
+            if (cmdData.clear) {
+                clearTerminal();
+                return;
+            }
+            
+            if (cmdData.async) {
+                await handleAsyncCommand(command);
+            } else {
+                cmdData.output.forEach(line => {
+                    addOutput(line, 'terminal-text');
+                });
+            }
+            
+            if (cmdData.redirect) {
+                setTimeout(() => {
+                    window.location.href = cmdData.redirect;
+                }, 2000);
+            }
+        } else {
+            addOutput(`Command not found: ${command}`, 'terminal-error');
+            addOutput('Type "help" for available commands.', 'terminal-muted');
+            
+            // Suggest similar commands
+            const suggestions = findSimilarCommands(command);
+            if (suggestions.length > 0) {
+                addOutput('');
+                addOutput('Did you mean:', 'terminal-secondary');
+                suggestions.forEach(suggestion => {
+                    addOutput(`  ${suggestion}`, 'terminal-primary');
+                });
+            }
+        }
+        
+        addOutput('');
+    }
+    
+    // Handle async commands (like blog)
+    async function handleAsyncCommand(command) {
+        if (command === 'blog') {
+            try {
+                const response = await fetch('/blog/api/posts');
+                const data = await response.json();
+                
+                if (data.posts && data.posts.length > 0) {
+                    terminalOutput.removeChild(terminalOutput.lastChild); // Remove "Loading..." message
+                    
+                    data.posts.forEach((post, index) => {
+                        addOutput(`${index + 1}. ${post.title}`, 'terminal-primary');
+                        addOutput(`   ${post.excerpt || 'No excerpt available'}`, 'terminal-text');
+                        addOutput(`   Published: ${post.published_at} | ${post.reading_time} min read`, 'terminal-muted');
+                        addOutput('');
+                    });
+                    addOutput('Visit /blog to read full posts.');
+                } else {
+                    addOutput('No blog posts found.');
+                }
+            } catch (error) {
+                addOutput('Error loading blog posts.', 'terminal-error');
+            }
+        }
+    }
+    
+    // Find similar commands
+    function findSimilarCommands(input) {
+        const commandList = Object.keys(commands);
+        return commandList.filter(cmd => 
+            cmd.includes(input) || input.includes(cmd)
+        ).slice(0, 3);
+    }
+    
+    // Handle input
+    terminalInput.addEventListener('keydown', async function(e) {
+        if (isProcessing) return;
+        
+        if (e.key === 'Enter') {
+            const command = this.value.trim();
+            if (command) {
+                isProcessing = true;
+                await processCommand(command);
+                isProcessing = false;
+            }
+            this.value = '';
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                this.value = commandHistory[historyIndex] || '';
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                this.value = commandHistory[historyIndex] || '';
+            } else {
+                historyIndex = -1;
+                this.value = '';
+            }
+        } else if (e.key === 'Tab') {
+            e.preventDefault();
+            const partial = this.value.toLowerCase();
+            const matches = Object.keys(commands).filter(cmd => cmd.startsWith(partial));
+            if (matches.length === 1) {
+                this.value = matches[0];
+            } else if (matches.length > 1) {
+                addOutput(`$ ${this.value}`, 'terminal-primary');
+                addOutput('Available completions:', 'terminal-secondary');
+                matches.forEach(match => {
+                    addOutput(`  ${match}`, 'terminal-primary');
+                });
+                addOutput('');
+            }
+        }
+    });
+    
+    // Initialize terminal
+    addOutput('Welcome to {{ config.SITE_NAME }} Interactive Terminal', 'terminal-primary');
+    addOutput('='.repeat(40), 'terminal-primary');
+    addOutput('');
+    addOutput('Type "help" to see available commands.');
+    addOutput('Type "exit" to open the full terminal interface.');
+    addOutput('');
+});
+</script>
+{% endblock %}

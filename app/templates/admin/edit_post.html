@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+
+{% block title %}{% if post %}Edit Post{% else %}New Post{% endif %} - Admin - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <section class="terminal-window mb-8">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-warning text-sm font-bold">
+                    <i class="fas fa-edit mr-2"></i>
+                    {% if post %}edit_post.py{% else %}new_post.py{% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                        {% if post %}Edit Post{% else %}Create New Post{% endif %}
+                    </h1>
+                    <p class="terminal-secondary">
+                        {% if post %}Modify existing blog post{% else %}Write a new blog post{% endif %}
+                    </p>
+                </div>
+                
+                <a href="{{ url_for('admin.posts') }}" class="terminal-button">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Posts
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Post Form -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <span class="terminal-primary text-sm font-bold">
+                <i class="fas fa-file-alt mr-2"></i>
+                post_editor.md
+            </span>
+        </div>
+        
+        <div class="p-8">
+            <form method="POST" class="space-y-6">
+                {{ form.hidden_tag() }}
+                
+                <!-- Title -->
+                <div>
+                    <label for="{{ form.title.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-heading mr-2"></i>
+                        Title:
+                    </label>
+                    {{ form.title(class="w-full terminal-input") }}
+                    {% if form.title.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.title.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Content -->
+                <div>
+                    <label for="{{ form.content.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-code mr-2"></i>
+                        Content (Markdown):
+                    </label>
+                    {{ form.content(class="w-full terminal-textarea font-mono") }}
+                    {% if form.content.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.content.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="mt-2 text-xs terminal-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Supports Markdown formatting. Use ## for headings, **bold**, *italic*, `code`, etc.
+                    </div>
+                </div>
+                
+                <!-- Excerpt -->
+                <div>
+                    <label for="{{ form.excerpt.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-paragraph mr-2"></i>
+                        Excerpt (Optional):
+                    </label>
+                    {{ form.excerpt(class="w-full terminal-textarea") }}
+                    {% if form.excerpt.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.excerpt.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="mt-2 text-xs terminal-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Brief description shown in post listings. Will auto-generate if left empty.
+                    </div>
+                </div>
+                
+                <!-- Tags -->
+                <div>
+                    <label for="{{ form.tags.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                        <i class="fas fa-tags mr-2"></i>
+                        Tags:
+                    </label>
+                    {{ form.tags(class="w-full terminal-input") }}
+                    {% if form.tags.errors %}
+                        <div class="mt-2 text-sm terminal-error">
+                            {% for error in form.tags.errors %}
+                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="mt-2 text-xs terminal-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Separate multiple tags with commas: python, flask, tutorial
+                    </div>
+                </div>
+                
+                <!-- SEO Fields -->
+                <div class="border-t border-gray-700 pt-6">
+                    <h3 class="text-lg font-bold terminal-primary mb-4">
+                        <i class="fas fa-search mr-2"></i>
+                        SEO Settings
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Meta Description -->
+                        <div>
+                            <label for="{{ form.meta_description.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                                Meta Description:
+                            </label>
+                            {{ form.meta_description(class="w-full terminal-input") }}
+                            {% if form.meta_description.errors %}
+                                <div class="mt-2 text-sm terminal-error">
+                                    {% for error in form.meta_description.errors %}
+                                        <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="mt-2 text-xs terminal-muted">
+                                Max 160 characters for search engines
+                            </div>
+                        </div>
+                        
+                        <!-- Meta Keywords -->
+                        <div>
+                            <label for="{{ form.meta_keywords.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                                Meta Keywords:
+                            </label>
+                            {{ form.meta_keywords(class="w-full terminal-input") }}
+                            {% if form.meta_keywords.errors %}
+                                <div class="mt-2 text-sm terminal-error">
+                                    {% for error in form.meta_keywords.errors %}
+                                        <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="mt-2 text-xs terminal-muted">
+                                Comma-separated keywords for SEO
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Publication Settings -->
+                <div class="border-t border-gray-700 pt-6">
+                    <h3 class="text-lg font-bold terminal-primary mb-4">
+                        <i class="fas fa-globe mr-2"></i>
+                        Publication Settings
+                    </h3>
+                    
+                    <div class="flex items-center">
+                        {{ form.is_published(class="mr-3") }}
+                        <label for="{{ form.is_published.id }}" class="text-sm terminal-text">
+                            <i class="fas fa-eye mr-2"></i>
+                            Publish immediately (make visible to public)
+                        </label>
+                    </div>
+                    
+                    {% if not post or not post.is_published %}
+                    <div class="mt-2 text-xs terminal-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Unchecked posts are saved as drafts and not visible to visitors
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-4 pt-6 border-t border-gray-700">
+                    <button type="submit" class="terminal-button">
+                        <i class="fas fa-save mr-2"></i>
+                        {% if post %}Update Post{% else %}Create Post{% endif %}
+                    </button>
+                    
+                    {% if post and post.is_published %}
+                    <a href="{{ url_for('blog.post', slug=post.slug) }}" target="_blank" class="terminal-button">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        View Live Post
+                    </a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('admin.posts') }}" class="terminal-secondary hover:terminal-primary transition-colors">
+                        <i class="fas fa-times mr-2"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-save draft functionality
+    const form = document.querySelector('form');
+    const titleInput = form.querySelector('input[name="title"]');
+    const contentTextarea = form.querySelector('textarea[name="content"]');
+    
+    // Character counter for meta description
+    const metaDescInput = form.querySelector('input[name="meta_description"]');
+    if (metaDescInput) {
+        const counter = document.createElement('div');
+        counter.className = 'text-xs terminal-muted mt-1 text-right';
+        metaDescInput.parentElement.appendChild(counter);
+        
+        function updateMetaCounter() {
+            const current = metaDescInput.value.length;
+            const max = 160;
+            counter.textContent = `${current}/${max} characters`;
+            
+            if (current > max) {
+                counter.className = 'text-xs terminal-error mt-1 text-right';
+            } else if (current > max * 0.9) {
+                counter.className = 'text-xs terminal-warning mt-1 text-right';
+            } else {
+                counter.className = 'text-xs terminal-muted mt-1 text-right';
+            }
+        }
+        
+        metaDescInput.addEventListener('input', updateMetaCounter);
+        updateMetaCounter();
+    }
+    
+    // Auto-resize content textarea
+    if (contentTextarea) {
+        function autoResize() {
+            contentTextarea.style.height = 'auto';
+            contentTextarea.style.height = Math.max(300, contentTextarea.scrollHeight) + 'px';
+        }
+        
+        contentTextarea.addEventListener('input', autoResize);
+        autoResize();
+    }
+    
+    // Form submission with loading state
+    form.addEventListener('submit', function() {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+        submitBtn.disabled = true;
+        
+        // Reset after timeout if form hasn't redirected
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }, 5000);
+    });
+    
+    // Markdown shortcuts
+    if (contentTextarea) {
+        contentTextarea.addEventListener('keydown', function(e) {
+            // Tab to indent
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                
+                // Insert 2 spaces
+                this.value = this.value.substring(0, start) + '  ' + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 2;
+            }
+            
+            // Ctrl+B for bold
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                insertMarkdown('**', '**');
+            }
+            
+            // Ctrl+I for italic
+            if (e.ctrlKey && e.key === 'i') {
+                e.preventDefault();
+                insertMarkdown('*', '*');
+            }
+        });
+        
+        function insertMarkdown(before, after) {
+            const start = contentTextarea.selectionStart;
+            const end = contentTextarea.selectionEnd;
+            const selectedText = contentTextarea.value.substring(start, end);
+            
+            const replacement = before + selectedText + after;
+            contentTextarea.value = contentTextarea.value.substring(0, start) + replacement + contentTextarea.value.substring(end);
+            
+            // Set cursor position
+            if (selectedText) {
+                contentTextarea.selectionStart = start;
+                contentTextarea.selectionEnd = start + replacement.length;
+            } else {
+                contentTextarea.selectionStart = contentTextarea.selectionEnd = start + before.length;
+            }
+            
+            contentTextarea.focus();
+        }
+    }
+});
+</script>
+
+<style>
+/* Custom checkbox styling */
+input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--terminal-border);
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+input[type="checkbox"]:checked {
+    border-color: var(--terminal-primary);
+    background: var(--terminal-primary);
+}
+
+input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: -2px;
+    left: 2px;
+    color: var(--terminal-bg);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+</style>
+{% endblock %}

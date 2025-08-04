@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Dashboard Header -->
+    <section class="terminal-window mb-8">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-warning text-sm font-bold">
+                    <i class="fas fa-tachometer-alt mr-2"></i>
+                    admin_dashboard.py
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                        System Dashboard
+                    </h1>
+                    <p class="terminal-secondary">
+                        Welcome back, {{ current_user.username }}
+                    </p>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <span class="w-3 h-3 bg-green-400 rounded-full animate-pulse mr-2"></span>
+                        <span class="terminal-primary text-sm">System Online</span>
+                    </div>
+                    <a href="{{ url_for('auth.logout') }}" 
+                       class="terminal-button text-sm">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Blog Posts -->
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-blog mr-2"></i>
+                    posts.stat
+                </span>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                    {{ stats.total_posts }}
+                </div>
+                <div class="text-sm terminal-muted mb-2">Total Posts</div>
+                <div class="text-xs">
+                    <span class="terminal-secondary">{{ stats.published_posts }} published</span>
+                    <span class="terminal-muted"> • </span>
+                    <span class="terminal-warning">{{ stats.draft_posts }} drafts</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Portfolio Items -->
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    portfolio.stat
+                </span>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-3xl font-bold terminal-secondary neon-glow mb-2">
+                    {{ stats.total_portfolio }}
+                </div>
+                <div class="text-sm terminal-muted mb-2">Projects</div>
+                <div class="text-xs terminal-primary">
+                    Active & Development
+                </div>
+            </div>
+        </div>
+        
+        <!-- Messages -->
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-envelope mr-2"></i>
+                    messages.stat
+                </span>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-3xl font-bold terminal-warning neon-glow mb-2">
+                    {{ stats.unread_messages }}
+                </div>
+                <div class="text-sm terminal-muted mb-2">Unread Messages</div>
+                {% if stats.unread_messages > 0 %}
+                <div class="text-xs terminal-warning">
+                    Requires attention
+                </div>
+                {% else %}
+                <div class="text-xs terminal-primary">
+                    All caught up!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- System Status -->
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-server mr-2"></i>
+                    system.stat
+                </span>
+            </div>
+            <div class="p-6 text-center">
+                <div class="text-3xl font-bold terminal-primary neon-glow mb-2">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="text-sm terminal-muted mb-2">System Status</div>
+                <div class="text-xs terminal-primary">
+                    All systems operational
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <section class="terminal-window mb-8">
+        <div class="terminal-header">
+            <span class="terminal-primary text-sm font-bold">
+                <i class="fas fa-rocket mr-2"></i>
+                quick_actions.sh
+            </span>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-2xl font-bold terminal-primary mb-6 neon-glow">
+                Quick Actions
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="{{ url_for('admin.new_post') }}" class="terminal-button text-center block">
+                    <i class="fas fa-plus mr-2"></i>
+                    New Post
+                </a>
+                <a href="{{ url_for('admin.posts') }}" class="terminal-button text-center block">
+                    <i class="fas fa-edit mr-2"></i>
+                    Manage Posts
+                </a>
+                <a href="{{ url_for('admin.portfolio') }}" class="terminal-button text-center block">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    Portfolio
+                </a>
+                <a href="{{ url_for('admin.messages') }}" class="terminal-button text-center block">
+                    <i class="fas fa-envelope mr-2"></i>
+                    Messages
+                    {% if stats.unread_messages > 0 %}
+                    <span class="ml-1 px-2 py-1 bg-red-500 text-white text-xs rounded-full">
+                        {{ stats.unread_messages }}
+                    </span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Recent Posts -->
+        <section class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-clock mr-2"></i>
+                    recent_posts.log
+                </span>
+            </div>
+            
+            <div class="p-8">
+                <h2 class="text-xl font-bold terminal-primary mb-6">Recent Posts</h2>
+                
+                {% if recent_posts %}
+                <div class="space-y-4">
+                    {% for post in recent_posts %}
+                    <div class="flex items-center justify-between p-4 bg-gray-900/50 rounded border border-gray-700">
+                        <div class="flex-1">
+                            <h3 class="font-bold terminal-text">{{ post.title }}</h3>
+                            <div class="text-sm terminal-muted">
+                                {{ post.created_at.strftime('%Y-%m-%d %H:%M') }} • 
+                                {% if post.is_published %}
+                                <span class="terminal-primary">Published</span>
+                                {% else %}
+                                <span class="terminal-warning">Draft</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="{{ url_for('admin.edit_post', id=post.id) }}" 
+                               class="terminal-secondary hover:terminal-primary text-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            {% if post.is_published %}
+                            <a href="{{ url_for('blog.post', slug=post.slug) }}" 
+                               class="terminal-secondary hover:terminal-primary text-sm">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="terminal-muted text-center py-8">No posts yet.</p>
+                {% endif %}
+                
+                <div class="text-center mt-6">
+                    <a href="{{ url_for('admin.posts') }}" class="terminal-button">
+                        <i class="fas fa-list mr-2"></i>
+                        View All Posts
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Recent Messages -->
+        <section class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-inbox mr-2"></i>
+                    recent_messages.log
+                </span>
+            </div>
+            
+            <div class="p-8">
+                <h2 class="text-xl font-bold terminal-primary mb-6">Recent Messages</h2>
+                
+                {% if recent_messages %}
+                <div class="space-y-4">
+                    {% for message in recent_messages %}
+                    <div class="flex items-start p-4 bg-gray-900/50 rounded border border-gray-700 {{ 'border-yellow-400' if not message.is_read else '' }}">
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-bold terminal-text">{{ message.name }}</h3>
+                                {% if not message.is_read %}
+                                <span class="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                                {% endif %}
+                            </div>
+                            <p class="text-sm terminal-muted mb-2">{{ message.subject or 'No subject' }}</p>
+                            <p class="text-sm terminal-text">
+                                {{ message.message[:100] }}{% if message.message|length > 100 %}...{% endif %}
+                            </p>
+                            <div class="text-xs terminal-muted mt-2">
+                                {{ message.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="terminal-muted text-center py-8">No messages yet.</p>
+                {% endif %}
+                
+                <div class="text-center mt-6">
+                    <a href="{{ url_for('admin.messages') }}" class="terminal-button">
+                        <i class="fas fa-envelope mr-2"></i>
+                        View All Messages
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-refresh stats every 30 seconds
+    setInterval(() => {
+        // Could implement AJAX refresh of stats here
+    }, 30000);
+    
+    // Animate stat numbers on load
+    const statNumbers = document.querySelectorAll('.neon-glow');
+    statNumbers.forEach((stat, index) => {
+        stat.style.opacity = '0';
+        stat.style.transform = 'scale(0.8)';
+        
+        setTimeout(() => {
+            stat.style.transition = 'all 0.6s ease';
+            stat.style.opacity = '1';
+            stat.style.transform = 'scale(1)';
+        }, index * 100);
+    });
+    
+    // Add pulse effect to unread message indicator
+    const unreadIndicators = document.querySelectorAll('.bg-yellow-400');
+    unreadIndicators.forEach(indicator => {
+        if (indicator.classList.contains('rounded-full')) {
+            indicator.style.animation = 'pulse 2s infinite';
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}Blog - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Explore technical insights, development tutorials, and thoughts on technology from a full-stack developer's perspective.{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-blog mr-2"></i>
+                    blog_posts.log
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8 text-center">
+            <h1 class="text-4xl font-bold terminal-primary neon-glow mb-4 typing">
+                Development Blog
+            </h1>
+            <p class="text-xl terminal-secondary mb-6">
+                Technical insights, tutorials, and thoughts from the terminal
+            </p>
+            {% if search_query %}
+            <div class="terminal-muted">
+                <i class="fas fa-search mr-2"></i>
+                Search results for: "{{ search_query }}"
+            </div>
+            {% elif current_tag %}
+            <div class="terminal-muted">
+                <i class="fas fa-tag mr-2"></i>
+                Filtered by tag: {{ current_tag }}
+            </div>
+            {% else %}
+            <div class="terminal-muted">
+                <i class="fas fa-terminal mr-2"></i>
+                cat blog_posts | grep -E "(published|featured)" | sort -r
+            </div>
+            {% endif %}
+        </div>
+    </section>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-3">
+            {% if posts.items %}
+            <!-- Blog Posts -->
+            <div class="space-y-8">
+                {% for post in posts.items %}
+                <article class="terminal-window hover:shadow-lg hover:shadow-green-400/20 transition-all duration-300">
+                    <div class="terminal-header">
+                        <div class="flex items-center space-x-4">
+                            <div class="terminal-controls">
+                                <div class="terminal-control control-close"></div>
+                                <div class="terminal-control control-minimize"></div>
+                                <div class="terminal-control control-maximize"></div>
+                            </div>
+                            <span class="terminal-primary text-sm font-bold">
+                                <i class="fas fa-file-alt mr-2"></i>
+                                {{ post.slug }}.md
+                            </span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs terminal-muted">
+                            <span>{{ post.published_at.strftime('%Y-%m-%d') if post.published_at }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8">
+                        <h2 class="text-2xl font-bold terminal-primary mb-4 neon-glow hover:text-green-300 transition-colors">
+                            <a href="{{ url_for('blog.post', slug=post.slug) }}">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                        
+                        <div class="terminal-text mb-4 leading-relaxed">
+                            {{ post.excerpt or (post.content[:300] + '...' if post.content|length > 300 else post.content) }}
+                        </div>
+                        
+                        <!-- Post Meta -->
+                        <div class="flex flex-wrap items-center justify-between pt-4 border-t border-gray-700">
+                            <div class="flex items-center space-x-4 text-sm terminal-muted">
+                                <span>
+                                    <i class="fas fa-clock mr-1"></i>
+                                    {{ post.reading_time }} min read
+                                </span>
+                                <span>
+                                    <i class="fas fa-eye mr-1"></i>
+                                    {{ post.view_count }} views
+                                </span>
+                                {% if post.tags %}
+                                <span>
+                                    <i class="fas fa-tags mr-1"></i>
+                                    {{ post.tags|length }} tag{{ 's' if post.tags|length != 1 else '' }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            
+                            <a href="{{ url_for('blog.post', slug=post.slug) }}" 
+                               class="terminal-button text-sm mt-4 lg:mt-0">
+                                <i class="fas fa-arrow-right mr-2"></i>
+                                Read More
+                            </a>
+                        </div>
+                        
+                        <!-- Tags -->
+                        {% if post.tags %}
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            {% for tag in post.tags %}
+                            <a href="{{ url_for('blog.tag', slug=tag.slug) }}" 
+                               class="px-2 py-1 bg-gray-800 border border-gray-600 text-xs terminal-secondary rounded hover:border-green-400 transition-colors">
+                                #{{ tag.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if posts.pages > 1 %}
+            <div class="terminal-window mt-8">
+                <div class="p-6">
+                    <div class="flex items-center justify-center space-x-4">
+                        {% if posts.has_prev %}
+                        <a href="{{ url_for('blog.index', page=posts.prev_num, **request.args) }}" 
+                           class="terminal-button">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Previous
+                        </a>
+                        {% endif %}
+                        
+                        <div class="flex items-center space-x-2">
+                            {% for page_num in posts.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != posts.page %}
+                                    <a href="{{ url_for('blog.index', page=page_num, **request.args) }}" 
+                                       class="px-3 py-2 bg-gray-800 text-sm terminal-text hover:terminal-primary transition-colors rounded">
+                                        {{ page_num }}
+                                    </a>
+                                    {% else %}
+                                    <span class="px-3 py-2 bg-green-400 text-black text-sm font-bold rounded">
+                                        {{ page_num }}
+                                    </span>
+                                    {% endif %}
+                                {% else %}
+                                <span class="px-3 py-2 text-sm terminal-muted">…</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        
+                        {% if posts.has_next %}
+                        <a href="{{ url_for('blog.index', page=posts.next_num, **request.args) }}" 
+                           class="terminal-button">
+                            Next
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="text-center mt-4 text-sm terminal-muted">
+                        Page {{ posts.page }} of {{ posts.pages }} 
+                        ({{ posts.total }} total posts)
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <!-- Empty State -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-primary text-sm font-bold">
+                        <i class="fas fa-search mr-2"></i>
+                        no_results.txt
+                    </span>
+                </div>
+                
+                <div class="p-8 text-center">
+                    <i class="fas fa-search text-6xl terminal-muted mb-4"></i>
+                    <h2 class="text-2xl font-bold terminal-primary mb-4">No Posts Found</h2>
+                    {% if search_query %}
+                    <p class="terminal-muted mb-6">
+                        No posts match your search for "{{ search_query }}".
+                    </p>
+                    {% elif current_tag %}
+                    <p class="terminal-muted mb-6">
+                        No posts found with the tag "{{ current_tag }}".
+                    </p>
+                    {% else %}
+                    <p class="terminal-muted mb-6">
+                        No blog posts have been published yet.
+                    </p>
+                    {% endif %}
+                    
+                    <div class="space-x-4">
+                        <a href="{{ url_for('blog.index') }}" class="terminal-button">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            All Posts
+                        </a>
+                        <a href="{{ url_for('main.index') }}" class="terminal-button">
+                            <i class="fas fa-home mr-2"></i>
+                            Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar -->
+        <aside class="space-y-8">
+            <!-- Search -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-primary text-sm font-bold">
+                        <i class="fas fa-search mr-2"></i>
+                        search.sh
+                    </span>
+                </div>
+                
+                <div class="p-6">
+                    <form method="GET" action="{{ url_for('blog.search') }}">
+                        <div class="flex">
+                            <input type="text" 
+                                   name="q" 
+                                   value="{{ search_form.query.data if search_form else '' }}"
+                                   placeholder="Search posts..."
+                                   class="flex-1 terminal-input rounded-r-none">
+                            <button type="submit" 
+                                    class="terminal-button rounded-l-none border-l-0">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Tags -->
+            {% if tags %}
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-primary text-sm font-bold">
+                        <i class="fas fa-tags mr-2"></i>
+                        tags.json
+                    </span>
+                </div>
+                
+                <div class="p-6">
+                    <h3 class="text-lg font-bold terminal-secondary mb-4">
+                        Popular Tags
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for tag in tags %}
+                        <a href="{{ url_for('blog.tag', slug=tag.slug) }}" 
+                           class="px-3 py-1 bg-gray-800 border border-gray-600 text-sm terminal-text hover:border-green-400 hover:terminal-primary transition-colors rounded-full">
+                            #{{ tag.name }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- RSS Feed -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-primary text-sm font-bold">
+                        <i class="fas fa-rss mr-2"></i>
+                        feed.xml
+                    </span>
+                </div>
+                
+                <div class="p-6">
+                    <h3 class="text-lg font-bold terminal-secondary mb-4">
+                        Stay Updated
+                    </h3>
+                    <p class="text-sm terminal-muted mb-4">
+                        Subscribe to my RSS feed for the latest posts and updates.
+                    </p>
+                    <a href="{{ url_for('blog.feed') }}" 
+                       class="terminal-button w-full text-center block">
+                        <i class="fas fa-rss mr-2"></i>
+                        Subscribe to RSS
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-primary text-sm font-bold">
+                        <i class="fas fa-activity mr-2"></i>
+                        activity.log
+                    </span>
+                </div>
+                
+                <div class="p-6">
+                    <h3 class="text-lg font-bold terminal-secondary mb-4">
+                        Quick Stats
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="terminal-muted">Total Posts:</span>
+                            <span class="terminal-primary">{{ posts.total if posts else 0 }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-muted">Tags:</span>
+                            <span class="terminal-primary">{{ tags|length if tags else 0 }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-muted">Status:</span>
+                            <span class="terminal-primary">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate blog post cards on scroll
+    const blogCards = document.querySelectorAll('article.terminal-window');
+    
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.opacity = '1';
+                }, index * 100);
+            }
+        });
+    }, observerOptions);
+    
+    blogCards.forEach(card => {
+        card.style.transform = 'translateY(20px)';
+        card.style.opacity = '0';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+    });
+    
+    // Search form enhancement
+    const searchForm = document.querySelector('form[action*="search"]');
+    if (searchForm) {
+        const searchInput = searchForm.querySelector('input[name="q"]');
+        
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchForm.submit();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

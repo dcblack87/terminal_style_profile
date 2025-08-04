@@ -1,0 +1,593 @@
+{% extends "base.html" %}
+
+{% block title %}Interactive Terminal - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Experience an interactive terminal interface to explore my portfolio, skills, and recent projects through command-line navigation.{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Terminal Interface -->
+    <section class="terminal-window h-96 md:h-[600px]">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-terminal mr-2"></i>
+                    {{ config.SITE_NAME.lower() }}_terminal.sh
+                </span>
+            </div>
+            <div class="terminal-muted text-xs">
+                user@{{ config.SITE_NAME.lower() }}:~$
+            </div>
+        </div>
+        
+        <div class="flex flex-col h-full">
+            <!-- Terminal Output -->
+            <div id="terminal-output" class="flex-1 p-6 overflow-y-auto bg-black font-mono text-sm">
+                <!-- Initial welcome message will be populated by JavaScript -->
+            </div>
+            
+            <!-- Command Input -->
+            <div class="border-t border-gray-700 p-4 bg-gray-900/50">
+                <div class="flex items-center">
+                    <span class="terminal-primary mr-2 font-bold">$</span>
+                    <input type="text" 
+                           id="command-input" 
+                           class="flex-1 bg-transparent border-none outline-none terminal-text font-mono text-sm"
+                           placeholder="Type 'help' to get started..."
+                           autocomplete="off"
+                           spellcheck="false">
+                    <span class="terminal-primary ml-2 animate-pulse">_</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Quick Commands -->
+    <section class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <button class="terminal-button text-sm p-3 quick-command" data-command="help">
+            <i class="fas fa-question-circle mr-2"></i>
+            help
+        </button>
+        <button class="terminal-button text-sm p-3 quick-command" data-command="about">
+            <i class="fas fa-user mr-2"></i>
+            about
+        </button>
+        <button class="terminal-button text-sm p-3 quick-command" data-command="portfolio">
+            <i class="fas fa-folder-open mr-2"></i>
+            portfolio
+        </button>
+        <button class="terminal-button text-sm p-3 quick-command" data-command="contact">
+            <i class="fas fa-envelope mr-2"></i>
+            contact
+        </button>
+    </section>
+    
+    <!-- Terminal Guide -->
+    <section class="terminal-window mt-8">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-book mr-2"></i>
+                    terminal_guide.txt
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-2xl font-bold terminal-primary mb-6 neon-glow">
+                <i class="fas fa-keyboard mr-2"></i>
+                Terminal Guide
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Basic Commands -->
+                <div>
+                    <h3 class="text-lg font-bold terminal-secondary mb-4">
+                        <i class="fas fa-terminal mr-2"></i>
+                        Basic Commands
+                    </h3>
+                    <div class="space-y-2 text-sm font-mono">
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">help</span>
+                            <span class="terminal-muted">Show all commands</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">about</span>
+                            <span class="terminal-muted">About information</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">contact</span>
+                            <span class="terminal-muted">Contact details</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">portfolio</span>
+                            <span class="terminal-muted">View projects</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">blog</span>
+                            <span class="terminal-muted">Recent blog posts</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">clear</span>
+                            <span class="terminal-muted">Clear terminal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Commands -->
+                <div>
+                    <h3 class="text-lg font-bold terminal-secondary mb-4">
+                        <i class="fas fa-cogs mr-2"></i>
+                        Advanced Commands
+                    </h3>
+                    <div class="space-y-2 text-sm font-mono">
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">whoami</span>
+                            <span class="terminal-muted">Current user info</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">ls</span>
+                            <span class="terminal-muted">List directories</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">skills</span>
+                            <span class="terminal-muted">Technical skills</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">social</span>
+                            <span class="terminal-muted">Social media links</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">history</span>
+                            <span class="terminal-muted">Command history</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="terminal-primary">exit</span>
+                            <span class="terminal-muted">Exit terminal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tips -->
+            <div class="mt-8 p-4 border-l-4 border-green-400 bg-green-400/10">
+                <h4 class="font-bold terminal-primary mb-2">
+                    <i class="fas fa-lightbulb mr-2"></i>
+                    Pro Tips:
+                </h4>
+                <ul class="space-y-1 text-sm terminal-text">
+                    <li>• Use <kbd class="bg-gray-800 px-2 py-1 rounded">↑</kbd> and <kbd class="bg-gray-800 px-2 py-1 rounded">↓</kbd> arrows to navigate command history</li>
+                    <li>• Press <kbd class="bg-gray-800 px-2 py-1 rounded">Tab</kbd> for command auto-completion</li>
+                    <li>• Type partial commands and press <kbd class="bg-gray-800 px-2 py-1 rounded">Enter</kbd> for suggestions</li>
+                    <li>• Use quick command buttons below the terminal for faster navigation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const output = document.getElementById('terminal-output');
+    const input = document.getElementById('command-input');
+    const quickCommands = document.querySelectorAll('.quick-command');
+    
+    let commandHistory = [];
+    let historyIndex = -1;
+    let isProcessing = false;
+    
+    // Terminal commands and responses
+    const commands = {
+        help: {
+            output: [
+                'Available commands:',
+                '',
+                '  help      - Show this help message',
+                '  about     - Display information about David',
+                '  portfolio - List my projects and applications',
+                '  blog      - Show recent blog posts',
+                '  contact   - Display contact information',
+                '  social    - Show social media links',
+                '  skills    - List my technical skills',
+                '  whoami    - Display current user info',
+                '  ls        - List available sections',
+                '  history   - Show command history',
+                '  clear     - Clear the terminal',
+                '  exit      - Exit terminal session',
+                '',
+                'Type any command and press Enter to execute.',
+                'Use ↑/↓ arrows to navigate command history.'
+            ]
+        },
+        about: {
+            output: [
+                'About {{ config.SITE_NAME }}',
+                '========================',
+                '',
+                'Full-Stack Developer & Digital Architect',
+                '{{ config.SITE_TAGLINE }}',
+                '',
+                'I specialize in building innovative web applications',
+                'and digital experiences with clean, maintainable code.',
+                '',
+                'Current focus areas:',
+                '• Web Application Development',
+                '• AI/ML Integration',
+                '• Cloud Architecture',
+                '• User Experience Design',
+                '',
+                'Always learning, always building, always improving.'
+            ]
+        },
+        portfolio: {
+            output: [
+                'Active Projects:',
+                '================',
+                '',
+                '1. CRM Baby (https://www.crmbaby.com)',
+                '   → Advanced Customer Relationship Management',
+                '   → Technologies: Python, Flask, AI/ML, PostgreSQL',
+                '   → Status: Live & Active Development',
+                '',
+                '2. App Launcher (https://www.applauncher.io)',
+                '   → Streamlined Application Deployment Platform',
+                '   → Technologies: Docker, Kubernetes, React, Node.js',
+                '   → Status: Live & Scaling',
+                '',
+                '3. Mix Convert Keyword (https://www.mix-convert-keyword.com)',
+                '   → AI-Powered Keyword Research & Optimization',
+                '   → Technologies: Python, NLP, Vue.js, Redis',
+                '   → Status: Live & Optimizing',
+                '',
+                'For detailed project information, visit: /portfolio'
+            ]
+        },
+        blog: {
+            output: [
+                'Recent Blog Posts:',
+                '==================',
+                '',
+                'Loading recent posts...'
+            ],
+            async: true
+        },
+        contact: {
+            output: [
+                'Contact Information:',
+                '===================',
+                '',
+                '📧 Email: Use contact form at /contact',
+                '🐙 GitHub: {{ config.GITHUB_URL }}',
+                '🐦 Twitter: {{ config.TWITTER_URL }}',
+                '💼 LinkedIn: {{ config.LINKEDIN_URL }}',
+                '',
+                '📍 Location: Remote (Available Globally)',
+                '⏰ Response Time: 24-48 hours',
+                '🤝 Collaboration: Remote & On-site',
+                '',
+                'Ready to discuss your project? Get in touch!'
+            ]
+        },
+        skills: {
+            output: [
+                'Core Expertise & Experience:',
+                '============================',
+                '',
+                '💻 Full-Stack Development:',
+                '   • Python Flask Framework',
+                '   • SQLAlchemy ORM & Database Design',
+                '   • HTML5 & Responsive Design',
+                '   • Tailwind CSS Styling',
+                '   • Server Management & Deployment',
+                '',
+                '🤖 AI & Innovation:',
+                '   • AI Integration & Implementation',
+                '   • Business Process Automation',
+                '   • Data-Driven Solutions',
+                '   • Technology Strategy',
+                '',
+                '📈 Marketing Excellence (15 Years):',
+                '   • Google Ads Partner Certified',
+                '   • PPC Campaign Management',
+                '   • Digital Marketing Strategy',
+                '   • Conversion Optimization',
+                '   • Performance Marketing',
+                '',
+                '🚀 Founder & Business Leadership:',
+                '   • Full-Stack Founder Experience',
+                '   • 15 Years PPC Agency Owner',
+                '   • Brand Development & Strategy',
+                '   • Go-to-Market Strategy',
+                '   • Customer Acquisition & Growth',
+                '',
+                '🎯 Strategic Expertise:',
+                '   • Technical Architecture',
+                '   • Business Development',
+                '   • Product Strategy',
+                '   • Innovation Implementation',
+                '   • Digital Strategy Consulting'
+            ]
+        },
+        social: {
+            output: [
+                'Social Media & Links:',
+                '=====================',
+                '',
+                '🐙 GitHub: {{ config.GITHUB_URL }}',
+                '   → Open source contributions & repositories',
+                '',
+                '🐦 Twitter: {{ config.TWITTER_URL }}',
+                '   → Tech insights, updates, and thoughts',
+                '',
+                '💼 LinkedIn: {{ config.LINKEDIN_URL }}',
+                '   → Professional network and career updates',
+                '',
+                'Follow me for the latest updates on projects,',
+                'technology insights, and development tips!'
+            ]
+        },
+        whoami: {
+            output: [
+                'guest@{{ config.SITE_NAME.lower() }}.dev',
+                '',
+                'You are currently browsing the interactive terminal',
+                'of a Full-Stack Developer and Digital Architect.',
+                '',
+                'User privileges: guest',
+                'Location: {{ config.SITE_NAME }} Terminal Interface',
+                'Session: Active',
+                'Access level: Public'
+            ]
+        },
+        ls: {
+            output: [
+                'Available sections:',
+                '',
+                'drwxr-xr-x  about/',
+                'drwxr-xr-x  portfolio/',
+                'drwxr-xr-x  blog/',
+                'drwxr-xr-x  contact/',
+                'drwxr-xr-x  terminal/',
+                '-rw-r--r--  skills.txt',
+                '-rw-r--r--  social.md',
+                '-rw-r--r--  README.md',
+                '',
+                'Use specific commands to explore each section.'
+            ]
+        },
+        history: {
+            output: []
+        },
+        clear: {
+            clear: true
+        },
+        exit: {
+            output: [
+                'Terminating session...',
+                'Thank you for visiting!',
+                '',
+                'Redirecting to homepage in 3 seconds...'
+            ],
+            redirect: '{{ url_for("main.index") }}'
+        }
+    };
+    
+    // Initialize terminal
+    function initTerminal() {
+        addOutput('Welcome to {{ config.SITE_NAME }} Interactive Terminal', 'terminal-primary');
+        addOutput('='.repeat(50), 'terminal-primary');
+        addOutput('');
+        addOutput('Type "help" to see available commands.');
+        addOutput('Use ↑/↓ arrows to navigate command history.');
+        addOutput('');
+        focusInput();
+    }
+    
+    // Add output to terminal
+    function addOutput(text, className = 'terminal-text') {
+        const line = document.createElement('div');
+        line.className = className;
+        
+        if (text === '') {
+            line.innerHTML = '&nbsp;';
+        } else {
+            line.textContent = text;
+        }
+        
+        output.appendChild(line);
+        output.scrollTop = output.scrollHeight;
+    }
+    
+    // Clear terminal
+    function clearTerminal() {
+        output.innerHTML = '';
+    }
+    
+    // Focus input
+    function focusInput() {
+        input.focus();
+    }
+    
+    // Process command
+    async function processCommand(cmd) {
+        const command = cmd.toLowerCase().trim();
+        
+        // Add command to history
+        if (command && commandHistory[0] !== command) {
+            commandHistory.unshift(command);
+            if (commandHistory.length > 50) {
+                commandHistory.pop();
+            }
+        }
+        historyIndex = -1;
+        
+        // Display command
+        addOutput(`$ ${cmd}`, 'terminal-primary');
+        
+        // Handle special cases
+        if (command === 'clear') {
+            clearTerminal();
+            return;
+        }
+        
+        if (command === 'history') {
+            addOutput('Command history:', 'terminal-secondary');
+            addOutput('');
+            commandHistory.slice(0, 10).forEach((histCmd, index) => {
+                addOutput(`${index + 1}. ${histCmd}`, 'terminal-text');
+            });
+            return;
+        }
+        
+        // Handle regular commands
+        if (commands[command]) {
+            const cmdData = commands[command];
+            
+            if (cmdData.clear) {
+                clearTerminal();
+                return;
+            }
+            
+            if (cmdData.async) {
+                await handleAsyncCommand(command);
+            } else {
+                cmdData.output.forEach(line => {
+                    addOutput(line, 'terminal-text');
+                });
+            }
+            
+            if (cmdData.redirect) {
+                setTimeout(() => {
+                    window.location.href = cmdData.redirect;
+                }, 3000);
+            }
+        } else {
+            addOutput(`Command not found: ${command}`, 'terminal-error');
+            addOutput('Type "help" for available commands.', 'terminal-muted');
+            
+            // Suggest similar commands
+            const suggestions = findSimilarCommands(command);
+            if (suggestions.length > 0) {
+                addOutput('');
+                addOutput('Did you mean:', 'terminal-secondary');
+                suggestions.forEach(suggestion => {
+                    addOutput(`  ${suggestion}`, 'terminal-primary');
+                });
+            }
+        }
+        
+        addOutput('');
+    }
+    
+    // Handle async commands (like blog)
+    async function handleAsyncCommand(command) {
+        if (command === 'blog') {
+            try {
+                const response = await fetch('/blog/api/posts');
+                const data = await response.json();
+                
+                if (data.posts && data.posts.length > 0) {
+                    output.removeChild(output.lastChild); // Remove "Loading..." message
+                    
+                    data.posts.forEach((post, index) => {
+                        addOutput(`${index + 1}. ${post.title}`, 'terminal-primary');
+                        addOutput(`   ${post.excerpt || 'No excerpt available'}`, 'terminal-text');
+                        addOutput(`   Published: ${post.published_at} | ${post.reading_time} min read`, 'terminal-muted');
+                        addOutput('');
+                    });
+                    addOutput('Visit /blog to read full posts.');
+                } else {
+                    addOutput('No blog posts found.');
+                }
+            } catch (error) {
+                addOutput('Error loading blog posts.', 'terminal-error');
+            }
+        }
+    }
+    
+    // Find similar commands
+    function findSimilarCommands(input) {
+        const commandList = Object.keys(commands);
+        return commandList.filter(cmd => 
+            cmd.includes(input) || input.includes(cmd)
+        ).slice(0, 3);
+    }
+    
+    // Handle input
+    input.addEventListener('keydown', async function(e) {
+        if (isProcessing) return;
+        
+        if (e.key === 'Enter') {
+            const command = this.value.trim();
+            if (command) {
+                isProcessing = true;
+                await processCommand(command);
+                isProcessing = false;
+            }
+            this.value = '';
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                this.value = commandHistory[historyIndex] || '';
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                this.value = commandHistory[historyIndex] || '';
+            } else {
+                historyIndex = -1;
+                this.value = '';
+            }
+        } else if (e.key === 'Tab') {
+            e.preventDefault();
+            const partial = this.value.toLowerCase();
+            const matches = Object.keys(commands).filter(cmd => cmd.startsWith(partial));
+            if (matches.length === 1) {
+                this.value = matches[0];
+            } else if (matches.length > 1) {
+                addOutput(`$ ${this.value}`, 'terminal-primary');
+                addOutput('Available completions:', 'terminal-secondary');
+                matches.forEach(match => {
+                    addOutput(`  ${match}`, 'terminal-primary');
+                });
+                addOutput('');
+            }
+        }
+    });
+    
+    // Quick command buttons
+    quickCommands.forEach(button => {
+        button.addEventListener('click', function() {
+            const command = this.dataset.command;
+            input.value = command;
+            processCommand(command);
+            input.value = '';
+        });
+    });
+    
+    // Keep input focused
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#command-input')) {
+            focusInput();
+        }
+    });
+    
+    // Initialize
+    initTerminal();
+});
+</script>
+{% endblock %}

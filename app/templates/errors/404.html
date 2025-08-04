@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 min-h-screen flex items-center justify-center">
+    <div class="terminal-window max-w-2xl w-full">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-error text-sm font-bold">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    error_404.log
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8 text-center">
+            <!-- ASCII Art 404 -->
+            <div class="font-mono text-xs terminal-error mb-8 leading-tight">
+                <pre class="whitespace-pre">
+ ██╗  ██╗ ██████╗ ██╗  ██╗
+ ██║  ██║██╔═████╗██║  ██║
+ ███████║██║██╔██║███████║
+ ╚════██║████╔╝██║╚════██║
+      ██║╚██████╔╝     ██║
+      ╚═╝ ╚═════╝      ╚═╝
+                </pre>
+            </div>
+            
+            <h1 class="text-4xl font-bold terminal-error neon-glow mb-4 typing">
+                Page Not Found
+            </h1>
+            
+            <p class="text-xl terminal-secondary mb-6">
+                The requested resource could not be located on this server.
+            </p>
+            
+            <div class="bg-black rounded-lg p-6 mb-8 text-left">
+                <div class="text-sm font-mono">
+                    <div class="terminal-primary">$ ls -la requested_page</div>
+                    <div class="terminal-error">ls: cannot access 'requested_page': No such file or directory</div>
+                    <div class="terminal-primary">$ find / -name "{{ request.path }}" 2>/dev/null</div>
+                    <div class="terminal-muted"># No results found</div>
+                    <div class="terminal-primary">$ echo "Possible causes:"</div>
+                    <div class="terminal-text">• The page has been moved or deleted</div>
+                    <div class="terminal-text">• The URL was typed incorrectly</div>
+                    <div class="terminal-text">• The link is outdated</div>
+                    <div class="terminal-primary">$ _</div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <p class="terminal-muted">
+                    Don't worry! Let's get you back on track.
+                </p>
+                
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="{{ url_for('main.index') }}" class="terminal-button">
+                        <i class="fas fa-home mr-2"></i>
+                        Home Directory
+                    </a>
+                    <a href="{{ url_for('blog.index') }}" class="terminal-button">
+                        <i class="fas fa-blog mr-2"></i>
+                        Blog Posts
+                    </a>
+                    <a href="{{ url_for('main.portfolio') }}" class="terminal-button">
+                        <i class="fas fa-folder-open mr-2"></i>
+                        Portfolio
+                    </a>
+                    <a href="{{ url_for('main.contact') }}" class="terminal-button">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Contact
+                    </a>
+                </div>
+                
+                <div class="mt-8">
+                    <button onclick="history.back()" class="terminal-secondary hover:terminal-primary transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add some terminal-like behavior
+    let dots = 0;
+    const loadingText = document.querySelector('.typing');
+    
+    if (loadingText) {
+        setInterval(() => {
+            dots = (dots + 1) % 4;
+            const dotString = '.'.repeat(dots);
+            // This could add some dynamic effect if needed
+        }, 500);
+    }
+    
+    // 404 error handling
+});
+</script>
+{% endblock %}

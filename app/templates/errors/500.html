@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}500 - Internal Server Error - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8 min-h-screen flex items-center justify-center">
+    <div class="terminal-window max-w-2xl w-full">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-error text-sm font-bold">
+                    <i class="fas fa-bug mr-2"></i>
+                    system_error.log
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8 text-center">
+            <!-- ASCII Art 500 -->
+            <div class="font-mono text-xs terminal-error mb-8 leading-tight">
+                <pre class="whitespace-pre">
+ ███████╗ ██████╗  ██████╗ 
+ ██╔════╝██╔═████╗██╔═████╗
+ ███████╗██║██╔██║██║██╔██║
+ ╚════██║████╔╝██║████╔╝██║
+ ███████║╚██████╔╝╚██████╔╝
+ ╚══════╝ ╚═════╝  ╚═════╝ 
+                </pre>
+            </div>
+            
+            <h1 class="text-4xl font-bold terminal-error neon-glow mb-4">
+                System Error
+            </h1>
+            
+            <p class="text-xl terminal-secondary mb-6">
+                An unexpected error occurred while processing your request.
+            </p>
+            
+            <div class="bg-black rounded-lg p-6 mb-8 text-left">
+                <div class="text-sm font-mono">
+                    <div class="terminal-error">ERROR: Unhandled exception in application</div>
+                    <div class="terminal-muted">Timestamp: {{ now.strftime('%Y-%m-%d %H:%M:%S') }}</div>
+                    <div class="terminal-muted">Request ID: {{ request.id if request.id else 'N/A' }}</div>
+                    <div class="terminal-primary">$ systemctl status application</div>
+                    <div class="terminal-warning">● application.service - Terminal Personal Site</div>
+                    <div class="terminal-warning">   Loaded: loaded (/etc/systemd/system/application.service)</div>
+                    <div class="terminal-error">   Active: degraded (running) since now</div>
+                    <div class="terminal-primary">$ tail -f /var/log/application.log</div>
+                    <div class="terminal-text">[INFO] Request received</div>
+                    <div class="terminal-text">[SYSTEM] Processing request...</div>
+                    <div class="terminal-error">[ERROR] Exception occurred during processing</div>
+                    <div class="terminal-warning">[WARN] Attempting automatic recovery...</div>
+                    <div class="terminal-primary">$ _</div>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <p class="terminal-muted">
+                    The system is attempting to recover. Please try again in a moment.
+                </p>
+                
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <button onclick="window.location.reload()" class="terminal-button">
+                        <i class="fas fa-redo mr-2"></i>
+                        Retry Request
+                    </button>
+                    <a href="{{ url_for('main.index') }}" class="terminal-button">
+                        <i class="fas fa-home mr-2"></i>
+                        Safe Mode (Home)
+                    </a>
+                    <a href="{{ url_for('main.contact') }}" class="terminal-button">
+                        <i class="fas fa-bug mr-2"></i>
+                        Report Issue
+                    </a>
+                </div>
+                
+                <div class="mt-8">
+                    <button onclick="history.back()" class="terminal-secondary hover:terminal-primary transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Previous State
+                    </button>
+                </div>
+                
+                <!-- Technical Details (for developers) -->
+                <details class="mt-8 text-left">
+                    <summary class="terminal-secondary cursor-pointer hover:terminal-primary transition-colors">
+                        <i class="fas fa-code mr-2"></i>
+                        Technical Details
+                    </summary>
+                    <div class="mt-4 p-4 bg-gray-900 rounded border terminal-muted text-sm font-mono">
+                        <div>Path: {{ request.path }}</div>
+                        <div>Method: {{ request.method }}</div>
+                        <div>User Agent: {{ request.user_agent.string[:100] }}...</div>
+                        <div>Referrer: {{ request.referrer or 'Direct' }}</div>
+                        <div>IP: {{ request.remote_addr }}</div>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-retry mechanism (optional)
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    // Add some visual feedback
+    const errorElements = document.querySelectorAll('.terminal-error');
+    errorElements.forEach(element => {
+        element.style.textShadow = '0 0 10px currentColor';
+        element.style.animation = 'pulse 2s infinite';
+    });
+    
+    // Log error to console
+    console.error(`%c500 Internal Server Error at ${window.location.href}`, 'color: #ff0040; font-weight: bold;');
+    
+    // Optional: Automatic retry after delay
+    // setTimeout(() => {
+    //     if (retryCount < maxRetries) {
+    //         retryCount++;
+    //         window.location.reload();
+    //     }
+    // }, 5000);
+});
+</script>
+{% endblock %}

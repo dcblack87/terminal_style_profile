@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+
+{% block title %}About - {{ config.SITE_NAME }}{% endblock %}
+
+{% block meta_description %}Learn about my journey as a full-stack developer, my passion for technology, and the philosophy behind my work.{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Hero Section -->
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-user mr-2"></i>
+                    about_me.py
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h1 class="text-4xl font-bold terminal-primary neon-glow mb-6 typing">
+                        About David
+                    </h1>
+                    <div class="space-y-4 terminal-text leading-relaxed">
+                        <p>
+                            <span class="terminal-primary">#!/usr/bin/env python3</span><br>
+                            <span class="terminal-secondary"># About: Full-Stack Founder & Digital Nomad</span>
+                        </p>
+                        <p>
+                            I left the UK over a decade ago and have been building businesses
+                            online from Thailand ever since. I build functional software and that 
+                            process normally begins with scratching my own itch.
+                        </p>
+                        <p>
+                            My expertise spans the complete business stack, from system architecture and UI design 
+                            to server management, security, product launch, and marketing strategy.
+                        </p>
+                        <p class="terminal-primary italic">
+                            "Too many people worry about what framework to use instead of just getting stuck in with
+                            any of them."
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <div class="relative">
+                        <img src="{{ config.PROFILE_IMAGE_URL }}" 
+                             alt="Profile Picture" 
+                             class="w-64 h-64 rounded-lg border-4 border-green-400 shadow-lg hover:shadow-green-400/50 transition-all duration-300">
+                        <div class="absolute -top-4 -right-4 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center animate-pulse">
+                            <i class="fas fa-code text-black text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Skills & Expertise -->
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-cogs mr-2"></i>
+                    skills.json
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-3xl font-bold terminal-primary mb-8 text-center neon-glow">
+                Core Expertise & Experience
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Technical Development -->
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all">
+                    <h3 class="text-xl font-bold terminal-secondary mb-4 flex items-center">
+                        <i class="fas fa-code mr-2"></i>
+                        Full-Stack Development
+                    </h3>
+                    <ul class="space-y-2 terminal-text">
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Python Flask Framework</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>SQLAlchemy ORM</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>HTML5 & Responsive Design</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Tailwind CSS</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Server Management & Deployment</li>
+                    </ul>
+                </div>
+                
+                <!-- AI & Technology -->
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all">
+                    <h3 class="text-xl font-bold terminal-secondary mb-4 flex items-center">
+                        <i class="fas fa-robot mr-2"></i>
+                        AI & Innovation
+                    </h3>
+                    <ul class="space-y-2 terminal-text">
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>AI Integration & Implementation</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Business Process Automation</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Data-Driven Solutions</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Technology Strategy</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Innovation Implementation</li>
+                    </ul>
+                </div>
+                
+                <!-- Marketing Expertise -->
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all">
+                    <h3 class="text-xl font-bold terminal-secondary mb-4 flex items-center">
+                        <i class="fas fa-bullhorn mr-2"></i>
+                        Marketing Excellence
+                    </h3>
+                    <ul class="space-y-2 terminal-text">
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>15 Years Marketing Experience</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Google Ads Partner Certified</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>PPC Campaign Management</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Digital Marketing Strategy</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Conversion Optimization</li>
+                    </ul>
+                </div>
+                
+                <!-- Business Leadership -->
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all">
+                    <h3 class="text-xl font-bold terminal-secondary mb-4 flex items-center">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Founder Experience
+                    </h3>
+                    <ul class="space-y-2 terminal-text">
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Full-Stack Founder</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>15 Years PPC Agency Owner</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Brand Development</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Product Strategy</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Business Development</li>
+                    </ul>
+                </div>
+                
+                <!-- Strategic Skills -->
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all">
+                    <h3 class="text-xl font-bold terminal-secondary mb-4 flex items-center">
+                        <i class="fas fa-chess mr-2"></i>
+                        Strategic Expertise
+                    </h3>
+                    <ul class="space-y-2 terminal-text">
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Technical Architecture</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Go-to-Market Strategy</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Customer Acquisition</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Performance Marketing</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Growth Optimization</li>
+                    </ul>
+                </div>
+                
+                <!-- Industry Recognition -->
+                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all">
+                    <h3 class="text-xl font-bold terminal-secondary mb-4 flex items-center">
+                        <i class="fas fa-award mr-2"></i>
+                        Certifications & Recognition
+                    </h3>
+                    <ul class="space-y-2 terminal-text">
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Google Ads Partner Status</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Performance Marketing Expert</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Technical Innovation Leader</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Digital Strategy Consultant</li>
+                        <li><i class="fas fa-check-circle terminal-primary mr-2"></i>Full-Stack Solutions Architect</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+   
+    <!-- Journey & Philosophy -->
+    <!--
+    <section class="terminal-window mb-12">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-route mr-2"></i>
+                    journey.md
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-3xl font-bold terminal-primary mb-8 text-center neon-glow">
+                My Development Philosophy
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div class="border-l-4 border-green-400 pl-6">
+                        <h3 class="text-xl font-bold terminal-secondary mb-2">
+                            <i class="fas fa-lightbulb mr-2"></i>
+                            Useful, functional software
+                        </h3>
+                        <p class="terminal-text">
+                            I mostly make software to solve my own problems and they become commercial
+                            products later. 
+                            
+                            
+                            I believe in understanding the problem deeply before jumping into solutions. 
+                            Great software starts with empathy for the user and a clear vision of what 
+                            success looks like.
+                        </p>
+                    </div>
+                    
+                    <div class="border-l-4 border-blue-400 pl-6">
+                        <h3 class="text-xl font-bold terminal-secondary mb-2">
+                            <i class="fas fa-code mr-2"></i>
+                            Clean, Maintainable Code
+                        </h3>
+                        <p class="terminal-text">
+                            I work with AI, so I make my code extremely friendly to both humans and AI. 
+                            Clear structure, comprehensive documentation, and logical organization ensure 
+                            that both developers and AI systems can understand and work with the codebase effectively.
+                        </p>
+                    </div>
+                    
+                    <div class="border-l-4 border-yellow-400 pl-6">
+                        <h3 class="text-xl font-bold terminal-secondary mb-2">
+                            <i class="fas fa-users mr-2"></i>
+                            Collaboration & Communication
+                        </h3>
+                        <p class="terminal-text">
+                            I normally work alone, focusing deeply without distractions to solve problems efficiently. 
+                            However, I'm always open to collaborations when the right opportunity 
+                            presents itself and mutual value can be created.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="border-l-4 border-purple-400 pl-6">
+                        <h3 class="text-xl font-bold terminal-secondary mb-2">
+                            <i class="fas fa-rocket mr-2"></i>
+                            Continuous Learning
+                        </h3>
+                        <p class="terminal-text">
+                            Technology evolves rapidly, and so do I. I'm constantly exploring new 
+                            frameworks, methodologies, and best practices to stay at the forefront 
+                            of software development.
+                        </p>
+                    </div>
+                    
+                    <div class="border-l-4 border-red-400 pl-6">
+                        <h3 class="text-xl font-bold terminal-secondary mb-2">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Security & Performance
+                        </h3>
+                        <p class="terminal-text">
+                            Security isn't an afterthought—it's baked into every decision. Similarly, 
+                            performance optimization is considered from day one, not when problems arise.
+                        </p>
+                    </div>
+                    
+                    <div class="border-l-4 border-green-400 pl-6">
+                        <h3 class="text-xl font-bold terminal-secondary mb-2">
+                            <i class="fas fa-coins mr-2"></i>
+                            Building for Fun and Profit
+                        </h3>
+                        <p class="terminal-text">
+                            I build software that I genuinely enjoy creating while ensuring it generates real value. 
+                            The most exiting projects are those where passion meets purpose and profit follows naturally.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    -->
+    
+    <!-- Current Status -->
+    <section class="terminal-window">
+        <div class="terminal-header">
+            <div class="flex items-center space-x-4">
+                <div class="terminal-controls">
+                    <div class="terminal-control control-close"></div>
+                    <div class="terminal-control control-minimize"></div>
+                    <div class="terminal-control control-maximize"></div>
+                </div>
+                <span class="terminal-primary text-sm font-bold">
+                    <i class="fas fa-wifi mr-2"></i>
+                    current_status.log
+                </span>
+            </div>
+        </div>
+        
+        <div class="p-8 text-center">
+            <h2 class="text-3xl font-bold terminal-primary mb-8 neon-glow">
+                Current Status
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div class="bg-gray-900/50 rounded-lg p-6 border border-green-400/30">
+                    <div class="flex items-center justify-center mb-4">
+                        <span class="w-4 h-4 bg-green-400 rounded-full animate-pulse mr-2"></span>
+                        <span class="terminal-primary font-bold">ONLINE</span>
+                    </div>
+                    <p class="terminal-text text-sm">
+                        Available for new projects and collaborations
+                    </p>
+                </div>
+                
+                <div class="bg-gray-900/50 rounded-lg p-6 border border-blue-400/30">
+                    <div class="flex items-center justify-center mb-4">
+                        <span class="w-4 h-4 bg-blue-400 rounded-full mr-2"></span>
+                        <span class="terminal-secondary font-bold">BUILDING</span>
+                    </div>
+                    <p class="terminal-text text-sm">
+                        Working on innovative CRM and deployment solutions
+                    </p>
+                </div>
+                
+                <div class="bg-gray-900/50 rounded-lg p-6 border border-yellow-400/30">
+                    <div class="flex items-center justify-center mb-4">
+                        <span class="w-4 h-4 bg-yellow-400 rounded-full mr-2"></span>
+                        <span class="terminal-warning font-bold">LEARNING</span>
+                    </div>
+                    <p class="terminal-text text-sm">
+                        Exploring AI/ML integration and cloud-native architectures
+                    </p>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <p class="text-lg terminal-text">
+                    Ready to tackle your next challenge? Let's create something amazing together.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="{{ url_for('main.contact') }}" class="terminal-button">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Get In Touch
+                    </a>
+                    <a href="{{ url_for('main.portfolio') }}" class="terminal-button">
+                        <i class="fas fa-folder-open mr-2"></i>
+                        View My Work
+                    </a>
+                    <a href="{{ url_for('blog.index') }}" class="terminal-button">
+                        <i class="fas fa-blog mr-2"></i>
+                        Read My Blog
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate skill cards on scroll
+    const skillCards = document.querySelectorAll('.border.border-gray-700');
+    
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.opacity = '1';
+                }, index * 100);
+            }
+        });
+    }, observerOptions);
+    
+    skillCards.forEach(card => {
+        card.style.transform = 'translateY(20px)';
+        card.style.opacity = '0';
+        card.style.transition = 'all 0.6s ease';
+        observer.observe(card);
+    });
+    
+    // Terminal cursor blink effect for status indicators
+    const statusIndicators = document.querySelectorAll('.animate-pulse');
+    statusIndicators.forEach(indicator => {
+        setInterval(() => {
+            indicator.style.opacity = indicator.style.opacity === '0' ? '1' : '0';
+        }, 1000);
+    });
+});
+</script>
+{% endblock %}
