@@ -33,7 +33,15 @@ def init_db():
             email='admin@example.com',
             is_admin=True
         )
-        admin.set_password('admin123')  # Change this in production!
+        # Use environment variable or default password for development
+        admin_password = os.environ.get('ADMIN_PASSWORD', 'TempPassword123!')
+        admin.set_password(admin_password)
+        
+        if admin_password == 'TempPassword123!':
+            print("⚠️  WARNING: Using default admin password!")
+            print("   Set ADMIN_PASSWORD environment variable in production")
+            print("   Example: export ADMIN_PASSWORD='your-secure-password'")
+            print("   Or change it in the admin panel after first login")
         db.session.add(admin)
     
     # Add portfolio items

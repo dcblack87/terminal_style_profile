@@ -57,6 +57,14 @@
                             terminal
                         </a>
                     </li>
+                    {% if not current_user.is_authenticated %}
+                    <li>
+                        <a href="{{ url_for('auth.login') }}" class="terminal-text hover:terminal-primary transition-colors">
+                            <i class="fas fa-angle-right mr-2"></i>
+                            admin login
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
             

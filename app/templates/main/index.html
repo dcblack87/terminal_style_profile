@@ -192,17 +192,30 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for item in portfolio_items[:3] %}
-                <div class="border border-gray-700 rounded-lg p-6 hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-xl font-bold terminal-primary">{{ item.title }}</h3>
-                        <span class="px-2 py-1 text-xs rounded" style="background-color: {{ item.status_color }}20; color: {{ item.status_color }};">
-                            {{ item.status.title() }}
-                        </span>
+                <div class="border border-gray-700 rounded-lg overflow-hidden hover:border-green-400 transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20">
+                    <!-- Project Image -->
+                    {% if item.display_image_url %}
+                    <div class="w-full aspect-[3/2] overflow-hidden bg-gray-900">
+                        <img src="{{ item.display_image_url }}" alt="{{ item.title }}" 
+                             class="w-full h-full object-contain bg-gray-900">
                     </div>
+                    {% else %}
+                    <div class="w-full aspect-[3/2] bg-gray-900 flex items-center justify-center">
+                        <i class="fas fa-laptop-code text-4xl terminal-primary opacity-30"></i>
+                    </div>
+                    {% endif %}
                     
-                    <p class="terminal-text mb-4 text-sm leading-relaxed">
-                        {{ item.description }}
-                    </p>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold terminal-primary">{{ item.title }}</h3>
+                            <span class="px-2 py-1 text-xs rounded" style="background-color: {{ item.status_color }}20; color: {{ item.status_color }};">
+                                {{ item.status.title() }}
+                            </span>
+                        </div>
+                        
+                        <p class="terminal-text mb-4 text-sm leading-relaxed">
+                            {{ item.description }}
+                        </p>
                     
                     {% if item.technologies %}
                     <div class="mb-4">
@@ -231,6 +244,7 @@
                             Source
                         </a>
                         {% endif %}
+                    </div>
                     </div>
                 </div>
                 {% endfor %}

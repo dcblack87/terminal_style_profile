@@ -110,10 +110,12 @@
                 <!-- Project Image/Icon -->
                 <div class="mb-6">
                     {% if item.display_image_url %}
-                    <img src="{{ item.display_image_url }}" alt="{{ item.title }}" 
-                         class="w-full h-48 object-cover rounded-lg border border-gray-700">
+                    <div class="w-full aspect-[3/2] rounded-lg border border-gray-700 overflow-hidden bg-gray-900">
+                        <img src="{{ item.display_image_url }}" alt="{{ item.title }}" 
+                             class="w-full h-full object-contain bg-gray-900">
+                    </div>
                     {% else %}
-                    <div class="w-full h-48 bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center">
+                    <div class="w-full aspect-[3/2] bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center">
                         <i class="fas fa-laptop-code text-6xl terminal-primary opacity-30"></i>
                     </div>
                     {% endif %}

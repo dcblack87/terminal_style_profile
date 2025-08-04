@@ -100,6 +100,15 @@
                         admin
                     </a>
                 </div>
+                {% else %}
+                <div class="border-l border-gray-600 pl-4 ml-4">
+                    <a href="{{ url_for('auth.login') }}" 
+                       class="terminal-secondary hover:terminal-primary transition-colors" 
+                       title="Admin Login">
+                        <i class="fas fa-sign-in-alt mr-1"></i>
+                        login
+                    </a>
+                </div>
                 {% endif %}
             </div>
             
@@ -172,6 +181,14 @@
                    class="block py-2 terminal-warning hover:terminal-primary transition-colors">
                     <i class="fas fa-cogs mr-2"></i>
                     admin dashboard
+                </a>
+            </div>
+            {% else %}
+            <div class="pt-2 border-t border-gray-700">
+                <a href="{{ url_for('auth.login') }}" 
+                   class="block py-2 terminal-secondary hover:terminal-primary transition-colors">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    admin login
                 </a>
             </div>
             {% endif %}
