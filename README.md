@@ -7,6 +7,12 @@ A sleek, terminal-themed personal portfolio and blog platform built with Flask. 
 ![Flask](https://img.shields.io/badge/Flask-2.3+-red?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
+## 🌐 Live Demo
+
+**See it in action:** [https://www.dcblack.co.uk](https://www.dcblack.co.uk)
+
+Experience the full terminal-themed interface, interactive commands, portfolio showcase, and blog system as used by the template's creator. This live site demonstrates all features including the admin panel workflow, GitHub integration, and responsive design.
+
 ## ✨ Features
 
 ### 🖥️ **Terminal-Themed Interface**
@@ -380,4 +386,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ for developers who love the terminal aesthetic**
 
-Made something cool with this template? [Let me know!](mailto:your@email.com)
+Made something cool with this template? [Let me know!](https://www.dcblack.co.uk/contact)
