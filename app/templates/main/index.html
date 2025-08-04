@@ -383,6 +383,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch('/api/github/stats');
             const data = await response.json();
             
+            // Update total repos count (includes private repos if authenticated)
+            const totalReposElement = document.getElementById('total-repos');
+            if (totalReposElement && data.profile && data.profile.total_repos !== undefined) {
+                totalReposElement.innerHTML = data.profile.total_repos;
+            } else if (totalReposElement && data.profile && data.profile.public_repos !== undefined) {
+                // Fallback to public repos if total not available
+                totalReposElement.innerHTML = data.profile.public_repos + '+';
+            } else if (totalReposElement) {
+                // Ultimate fallback if no profile data
+                totalReposElement.innerHTML = '10+';
+            }
+            
+            // Update commits count
             if (data.commits && data.commits.count > 0) {
                 const commitsCount = document.getElementById('commits-count');
                 const commitsMonth = commitsCount.nextElementSibling;
@@ -398,9 +411,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     linkText.innerHTML = '<i class="fas fa-external-link-alt mr-1"></i>View on GitHub';
                     githubLink.appendChild(linkText);
                 }
+            } else {
+                // Fallback for commits
+                const commitsElement = document.getElementById('commits-count');
+                if (commitsElement) {
+                    commitsElement.innerHTML = '50+';
+                }
             }
         } catch (error) {
+            console.log('GitHub stats loading failed, using fallbacks');
             // Fallback to static display
+            const totalReposElement = document.getElementById('total-repos');
+            if (totalReposElement) {
+                totalReposElement.innerHTML = '15+';
+            }
+            
             const commitsElement = document.getElementById('commits-count');
             if (commitsElement) {
                 commitsElement.innerHTML = '100+';

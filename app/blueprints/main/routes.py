@@ -137,6 +137,10 @@ def github_stats_api():
     """
     commits = github_stats.get_commits_this_month()
     profile = github_stats.get_profile_stats()
+    repos = github_stats.get_user_repos()
+    
+    # Add actual total repo count (includes private if authenticated)
+    profile['total_repos'] = len(repos) if repos else profile.get('public_repos', 0)
     
     return {
         'commits': commits,
