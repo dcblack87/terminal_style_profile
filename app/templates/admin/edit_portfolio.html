@@ -49,7 +49,7 @@
         </div>
         
         <div class="p-8">
-            <form method="POST" class="space-y-6">
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
                 {{ form.hidden_tag() }}
                 
                 <!-- Title -->
@@ -129,23 +129,89 @@
                     </div>
                 </div>
                 
-                <!-- Image URL -->
+                <!-- Image Options -->
                 <div>
-                    <label for="{{ form.image_url.id }}" class="block text-sm font-bold terminal-secondary mb-2">
+                    <label class="block text-sm font-bold terminal-secondary mb-4">
                         <i class="fas fa-image mr-2"></i>
-                        Image URL:
+                        Project Image:
                     </label>
-                    {{ form.image_url(class="w-full terminal-input") }}
-                    {% if form.image_url.errors %}
-                        <div class="mt-2 text-sm terminal-error">
-                            {% for error in form.image_url.errors %}
-                                <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                    
+                    <!-- Current Image Preview -->
+                    {% if item and (item.image_filename or item.image_url) %}
+                    <div class="mb-4 p-4 bg-gray-900/30 border border-gray-700 rounded-lg">
+                        <p class="text-sm terminal-muted mb-2">Current Image:</p>
+                        <img src="{{ item.display_image_url }}" alt="{{ item.title }}" 
+                             class="max-w-xs h-32 object-cover rounded border border-gray-600">
+                        <p class="text-xs terminal-muted mt-2">
+                            {% if item.image_filename %}
+                                📁 Uploaded: {{ item.image_filename }}
+                            {% else %}
+                                🔗 URL: {{ item.image_url }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Image Option Selection -->
+                    <div class="space-y-4">
+                        <div class="flex space-x-6">
+                            {% for value, label in form.image_option.choices %}
+                            <div class="flex items-center">
+                                <input type="radio" name="{{ form.image_option.name }}" value="{{ value }}" 
+                                       id="{{ form.image_option.name }}_{{ value }}"
+                                       {% if form.image_option.data == value %}checked{% endif %}
+                                       class="mr-2">
+                                <label for="{{ form.image_option.name }}_{{ value }}" class="terminal-text">
+                                    {% if value == 'upload' %}
+                                        <i class="fas fa-upload mr-1"></i>
+                                    {% else %}
+                                        <i class="fas fa-link mr-1"></i>
+                                    {% endif %}
+                                    {{ label }}
+                                </label>
+                            </div>
                             {% endfor %}
                         </div>
-                    {% endif %}
-                    <div class="mt-2 text-xs terminal-muted">
-                        <i class="fas fa-info-circle mr-1"></i>
-                        Optional: URL to a screenshot or logo for the project
+                        
+                        <!-- Upload Option -->
+                        <div id="upload-option" class="image-option-content">
+                            <label for="{{ form.image_file.id }}" class="block text-sm terminal-secondary mb-2">
+                                <i class="fas fa-cloud-upload-alt mr-2"></i>
+                                Upload Image File:
+                            </label>
+                            {{ form.image_file(class="w-full terminal-input") }}
+                            {% if form.image_file.errors %}
+                                <div class="mt-2 text-sm terminal-error">
+                                    {% for error in form.image_file.errors %}
+                                        <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="mt-2 text-xs terminal-muted">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                <strong>Recommended:</strong> 1200x800px (3:2 ratio) • Max 5MB • JPG, PNG, WebP, GIF
+                            </div>
+                        </div>
+                        
+                        <!-- URL Option -->
+                        <div id="url-option" class="image-option-content">
+                            <label for="{{ form.image_url.id }}" class="block text-sm terminal-secondary mb-2">
+                                <i class="fas fa-globe mr-2"></i>
+                                Image URL:
+                            </label>
+                            {{ form.image_url(class="w-full terminal-input") }}
+                            {% if form.image_url.errors %}
+                                <div class="mt-2 text-sm terminal-error">
+                                    {% for error in form.image_url.errors %}
+                                        <div><i class="fas fa-exclamation-triangle mr-1"></i>{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="mt-2 text-xs terminal-muted">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Direct link to an image hosted elsewhere
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -267,6 +333,60 @@ document.addEventListener('DOMContentLoaded', function() {
         
         descriptionTextarea.addEventListener('input', autoResize);
         autoResize();
+    }
+    
+    // Image option toggle functionality
+    const imageOptions = document.querySelectorAll('input[name="image_option"]');
+    const uploadOption = document.getElementById('upload-option');
+    const urlOption = document.getElementById('url-option');
+    
+    function toggleImageOptions() {
+        const selectedOption = document.querySelector('input[name="image_option"]:checked').value;
+        
+        if (selectedOption === 'upload') {
+            uploadOption.style.display = 'block';
+            urlOption.style.display = 'none';
+        } else {
+            uploadOption.style.display = 'none';
+            urlOption.style.display = 'block';
+        }
+    }
+    
+    // Initialize visibility
+    toggleImageOptions();
+    
+    // Add event listeners
+    imageOptions.forEach(option => {
+        option.addEventListener('change', toggleImageOptions);
+    });
+    
+    // File upload preview
+    const fileInput = form.querySelector('input[type="file"]');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Show file info
+                const fileInfo = document.createElement('div');
+                fileInfo.className = 'mt-2 text-xs terminal-primary';
+                fileInfo.innerHTML = `<i class="fas fa-file-image mr-1"></i>Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                
+                // Remove existing file info
+                const existingInfo = fileInput.parentElement.querySelector('.file-info');
+                if (existingInfo) {
+                    existingInfo.remove();
+                }
+                
+                fileInfo.classList.add('file-info');
+                fileInput.parentElement.appendChild(fileInfo);
+                
+                // Validate file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    fileInfo.className = 'mt-2 text-xs terminal-error';
+                    fileInfo.innerHTML = `<i class="fas fa-exclamation-triangle mr-1"></i>File too large: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB). Max 5MB allowed.`;
+                }
+            }
+        });
     }
     
     // Form submission with loading state

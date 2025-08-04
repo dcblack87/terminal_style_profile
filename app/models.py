@@ -176,6 +176,7 @@ class PortfolioItem(db.Model):
     url = db.Column(db.String(255))
     github_url = db.Column(db.String(255))
     image_url = db.Column(db.String(255))
+    image_filename = db.Column(db.String(255))
     technologies = db.Column(db.String(255))  # Comma-separated list
     status = db.Column(db.String(20), default='live')  # live, development, archived
     sort_order = db.Column(db.Integer, default=0)
@@ -212,6 +213,19 @@ class PortfolioItem(db.Model):
             'archived': '#888888'    # Gray
         }
         return colors.get(self.status, '#00ff00')
+    
+    @property
+    def display_image_url(self):
+        """Get the appropriate image URL for display.
+        
+        Prioritizes uploaded image filename over external image_url.
+        
+        Returns:
+            str: URL to the image or None if no image available
+        """
+        if self.image_filename:
+            return f"/static/images/portfolio/{self.image_filename}"
+        return self.image_url
     
     def __repr__(self):
         return f'<PortfolioItem {self.title}>'

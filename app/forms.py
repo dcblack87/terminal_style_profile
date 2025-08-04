@@ -3,7 +3,8 @@ WTForms for the hacker terminal personal brand page.
 """
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SelectField, HiddenField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SelectField, HiddenField, RadioField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, URL, ValidationError
 from wtforms.widgets import TextArea
 from app.models import User, Tag
@@ -56,8 +57,17 @@ class PortfolioItemForm(FlaskForm):
                      render_kw={'placeholder': 'https://example.com', 'class': 'terminal-input'})
     github_url = StringField('GitHub URL', validators=[Optional(), URL()],
                             render_kw={'placeholder': 'https://github.com/user/repo', 'class': 'terminal-input'})
+    
+    # Image options - either upload a file or provide a URL
+    image_option = RadioField('Image Option', 
+                             choices=[('upload', 'Upload Image'), ('url', 'Image URL')],
+                             default='upload')
+    image_file = FileField('Upload Image', 
+                          validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png', 'gif', 'webp'], 'Images only!')],
+                          render_kw={'class': 'terminal-input', 'accept': 'image/*'})
     image_url = StringField('Image URL', validators=[Optional(), URL()],
                            render_kw={'placeholder': 'https://example.com/image.jpg', 'class': 'terminal-input'})
+    
     technologies = StringField('Technologies', validators=[Optional()],
                               render_kw={'placeholder': 'Python, Flask, React, etc.', 'class': 'terminal-input'})
     status = SelectField('Status', choices=[

@@ -7,6 +7,7 @@ from flask_login import login_required, current_user
 from app.blueprints.admin import bp
 from app.models import BlogPost, PortfolioItem, Tag, ContactMessage, User
 from app.forms import BlogPostForm, PortfolioItemForm, TagForm, UserProfileForm
+from app.image_utils import save_portfolio_image, delete_portfolio_image
 from app import db
 from datetime import datetime
 
@@ -215,12 +216,27 @@ def new_portfolio_item():
     form = PortfolioItemForm()
     
     if form.validate_on_submit():
+        # Handle image upload or URL
+        image_filename = None
+        image_url = None
+        
+        if form.image_option.data == 'upload' and form.image_file.data:
+            success, filename, error = save_portfolio_image(form.image_file.data)
+            if success:
+                image_filename = filename
+            else:
+                flash(f'Image upload failed: {error}', 'error')
+                return render_template('admin/edit_portfolio.html', form=form, item=None)
+        elif form.image_option.data == 'url' and form.image_url.data:
+            image_url = form.image_url.data
+        
         item = PortfolioItem(
             title=form.title.data,
             description=form.description.data,
             url=form.url.data,
             github_url=form.github_url.data,
-            image_url=form.image_url.data,
+            image_url=image_url,
+            image_filename=image_filename,
             technologies=form.technologies.data,
             status=form.status.data,
             is_featured=form.is_featured.data,
@@ -242,12 +258,40 @@ def edit_portfolio_item(id):
     item = PortfolioItem.query.get_or_404(id)
     form = PortfolioItemForm(obj=item)
     
+    # Set the image option based on existing data
+    if item.image_filename:
+        form.image_option.data = 'upload'
+    elif item.image_url:
+        form.image_option.data = 'url'
+    
     if form.validate_on_submit():
+        # Handle image changes
+        old_image_filename = item.image_filename
+        
+        if form.image_option.data == 'upload' and form.image_file.data:
+            # New image uploaded
+            success, filename, error = save_portfolio_image(form.image_file.data)
+            if success:
+                # Delete old image if it exists
+                if old_image_filename:
+                    delete_portfolio_image(old_image_filename)
+                item.image_filename = filename
+                item.image_url = None  # Clear URL when using upload
+            else:
+                flash(f'Image upload failed: {error}', 'error')
+                return render_template('admin/edit_portfolio.html', form=form, item=item)
+        elif form.image_option.data == 'url':
+            # Using URL instead of upload
+            if old_image_filename:
+                delete_portfolio_image(old_image_filename)
+            item.image_filename = None
+            item.image_url = form.image_url.data
+        # If no new image and keeping existing, don't change image fields
+        
         item.title = form.title.data
         item.description = form.description.data
         item.url = form.url.data
         item.github_url = form.github_url.data
-        item.image_url = form.image_url.data
         item.technologies = form.technologies.data
         item.status = form.status.data
         item.is_featured = form.is_featured.data
@@ -266,6 +310,11 @@ def edit_portfolio_item(id):
 def delete_portfolio_item(id):
     """Delete a portfolio item."""
     item = PortfolioItem.query.get_or_404(id)
+    
+    # Delete associated image file if it exists
+    if item.image_filename:
+        delete_portfolio_image(item.image_filename)
+    
     db.session.delete(item)
     db.session.commit()
     flash('Portfolio item deleted successfully!', 'success')
