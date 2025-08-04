@@ -6,6 +6,58 @@
 
 {% block meta_keywords %}{{ post.meta_keywords or 'programming, development, technology, blog' }}{% endblock %}
 
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block og_description %}{{ post.meta_description or post.excerpt or (post.content[:160] if post.content|length > 160) }}{% endblock %}
+
+{% block canonical_url %}{{ url_for('blog.post', slug=post.slug, _external=True) }}{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "{{ post.title }}",
+  "description": "{{ post.meta_description or post.excerpt or (post.content[:200] if post.content|length > 200) }}",
+  "image": "{{ url_for('static', filename='images/og-image.jpg', _external=True) }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ config.SITE_NAME }}",
+    "url": "{{ url_for('main.index', _external=True) }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ config.SITE_NAME }}",
+    "url": "{{ url_for('main.index', _external=True) }}"
+  },
+  "datePublished": "{{ post.published_at.isoformat() if post.published_at }}",
+  "dateModified": "{{ post.updated_at.isoformat() }}",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ url_for('blog.post', slug=post.slug, _external=True) }}"
+  },
+  "wordCount": {{ post.content.split()|length }},
+  "timeRequired": "PT{{ post.reading_time }}M",
+  "articleSection": "Technology",
+  "keywords": [
+    {% if post.tags %}
+      {% for tag in post.tags %}"{{ tag.name }}"{% if not loop.last %},{% endif %}{% endfor %}
+    {% else %}
+      "programming", "development", "technology"
+    {% endif %}
+  ],
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Web Development"
+    },
+    {
+      "@type": "Thing", 
+      "name": "Programming"
+    }
+  ]
+}
+{% endblock %}
+
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <!-- Back Navigation -->

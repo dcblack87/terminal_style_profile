@@ -2,6 +2,54 @@
 
 {% block title %}{{ config.SITE_NAME }} - {{ config.SITE_TAGLINE }}{% endblock %}
 
+{% block meta_description %}David Black - Full-stack founder making apps for fun and profit. Successful entrepreneur behind CRM Baby, App Launcher, and Mix Convert Keyword. 15+ years business experience, Google Ads Partner, building commercial software from Thailand.{% endblock %}
+
+{% block meta_keywords %}david black, full-stack founder, app entrepreneur, saas founder, CRM Baby, App Launcher, Mix Convert Keyword, commercial software, profitable apps, digital nomad thailand, google ads partner, ppc agency owner{% endblock %}
+
+{% block og_type %}website{% endblock %}
+{% block og_title %}{{ config.SITE_NAME }} - Full-Stack Developer & Digital Architect{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ config.SITE_NAME }}",
+  "url": "{{ url_for('main.index', _external=True) }}",
+  "description": "Full-stack developer and digital architect specializing in Python, AI/ML, and modern web applications",
+  "jobTitle": "Full-Stack Developer & Digital Architect",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Independent"
+  },
+  "sameAs": [
+    "{{ config.GITHUB_URL }}",
+    "{{ config.TWITTER_URL }}"
+  ],
+  "knowsAbout": [
+    "Web Development",
+    "Python",
+    "Flask",
+    "JavaScript",
+    "AI/ML",
+    "Digital Architecture",
+    "Customer Relationship Management",
+    "Application Deployment"
+  ],
+  "hasOccupation": {
+    "@type": "Occupation",
+    "name": "Full-Stack Developer",
+    "occupationLocation": {
+      "@type": "Place",
+      "name": "Remote"
+    }
+  },
+  "alumniOf": {
+    "@type": "Organization",
+    "name": "Self-taught Developer"
+  }
+}
+{% endblock %}
+
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <!-- Hero Section -->
@@ -44,7 +92,7 @@
                     </p>
                     <p class="text-lg mb-8 terminal-text leading-relaxed">
                         Hey there! Welcome to my terminal. 
-                        I'm David a full-stack founder making apps from Thailand. 
+                        I'm David a developer making apps from Thailand. 
                         Checkout my current projects and let's connect on X.
   
                     </p>

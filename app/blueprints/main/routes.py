@@ -10,6 +10,9 @@ from app import db
 from app.github_stats import github_stats
 from app.email_utils import send_contact_form_email, send_contact_confirmation_email
 
+# Import SEO routes to register them
+from app.blueprints.main import seo_routes
+
 @bp.route('/')
 @bp.route('/index')
 def index():

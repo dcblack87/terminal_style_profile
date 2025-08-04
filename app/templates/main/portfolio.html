@@ -2,7 +2,51 @@
 
 {% block title %}Portfolio - {{ config.SITE_NAME }}{% endblock %}
 
-{% block meta_description %}Explore my portfolio of innovative web applications and digital projects including CRM Baby, App Launcher, and Mix Convert Keyword.{% endblock %}
+{% block meta_description %}David Black's commercial app portfolio - CRM Baby (AI-powered CRM), App Launcher (deployment platform), and Mix Convert Keyword (optimization tool). Profitable SaaS applications built by a full-stack founder from Thailand.{% endblock %}
+
+{% block meta_keywords %}david black portfolio, commercial apps, profitable saas, CRM Baby, App Launcher, Mix Convert Keyword, business applications, entrepreneur portfolio, app founder, commercial software{% endblock %}
+
+{% block og_title %}Portfolio - {{ config.SITE_NAME }}{% endblock %}
+{% block og_type %}website{% endblock %}
+
+{% block canonical_url %}{{ url_for('main.portfolio', _external=True) }}{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "David Black's Portfolio",
+  "description": "Portfolio showcasing innovative web applications and digital projects including CRM Baby, App Launcher, and Mix Convert Keyword",
+  "url": "{{ url_for('main.portfolio', _external=True) }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ config.SITE_NAME }}",
+    "url": "{{ url_for('main.index', _external=True) }}",
+    "jobTitle": "Full-Stack Developer & Digital Architect"
+  },
+  "workExample": [
+    {% for item in portfolio_items %}
+    {
+      "@type": "SoftwareApplication",
+      "name": "{{ item.title }}",
+      "description": "{{ item.description }}",
+      "url": "{{ item.url if item.url }}",
+      "applicationCategory": "WebApplication",
+      "operatingSystem": "Web Browser",
+      "creator": {
+        "@type": "Person",
+        "name": "{{ config.SITE_NAME }}"
+      },
+      "programmingLanguage": [
+        {% if item.technologies %}
+          {% for tech in item.tech_list %}"{{ tech }}"{% if not loop.last %},{% endif %}{% endfor %}
+        {% endif %}
+      ]
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">

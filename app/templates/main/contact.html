@@ -2,7 +2,55 @@
 
 {% block title %}Contact - {{ config.SITE_NAME }}{% endblock %}
 
-{% block meta_description %}Get in touch for project collaborations, technical consulting, or just to say hello. Let's build something amazing together.{% endblock %}
+{% block meta_description %}Contact David Black - Full-stack founder and app entrepreneur. Partner with the creator of CRM Baby, App Launcher, and Mix Convert Keyword for business collaborations, co-founder opportunities, or commercial app development from Thailand.{% endblock %}
+
+{% block meta_keywords %}contact david black, app founder collaboration, co-founder opportunities, commercial app development, saas partnerships, entrepreneur networking, business partnerships thailand{% endblock %}
+
+{% block og_title %}Contact {{ config.SITE_NAME }} - Let's Build Something Amazing{% endblock %}
+{% block og_type %}website{% endblock %}
+
+{% block canonical_url %}{{ url_for('main.contact', _external=True) }}{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "mainEntity": {
+    "@type": "Person",
+    "name": "{{ config.SITE_NAME }}",
+    "jobTitle": "Full-Stack Developer & Digital Architect",
+    "email": "{{ config.CONTACT_EMAIL }}",
+    "url": "{{ url_for('main.index', _external=True) }}",
+    "availableLanguage": ["English"],
+    "contactOption": "TollFree",
+    "areaServed": "Worldwide",
+    "serviceType": [
+      "Web Development",
+      "Full-Stack Development", 
+      "AI/ML Integration",
+      "Technical Consulting",
+      "Digital Architecture",
+      "Python Development"
+    ],
+    "sameAs": [
+      "{{ config.GITHUB_URL }}",
+      "{{ config.TWITTER_URL }}"
+    ]
+  },
+  "potentialAction": {
+    "@type": "CommunicateAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ url_for('main.contact', _external=True) }}",
+      "inLanguage": "en",
+      "actionPlatform": [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform"
+      ]
+    }
+  }
+}
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">

@@ -2,7 +2,45 @@
 
 {% block title %}Blog - {{ config.SITE_NAME }}{% endblock %}
 
-{% block meta_description %}Explore technical insights, development tutorials, and thoughts on technology from a full-stack developer's perspective.{% endblock %}
+{% block meta_description %}Business and technology insights from David Black - full-stack founder of CRM Baby, App Launcher, and Mix Convert Keyword. Entrepreneurship, app development, marketing strategies, and building profitable software from Thailand.{% endblock %}
+
+{% block meta_keywords %}entrepreneur blog, app founder insights, saas business, profitable apps, digital nomad entrepreneur, app development business, commercial software insights, startup founder blog{% endblock %}
+
+{% block og_title %}Development Blog - {{ config.SITE_NAME }}{% endblock %}
+{% block og_type %}blog{% endblock %}
+
+{% block canonical_url %}{{ url_for('blog.index', _external=True) }}{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "{{ config.SITE_NAME }} Development Blog",
+  "description": "Technical blog covering full-stack development, Python, AI/ML, and modern web technologies",
+  "url": "{{ url_for('blog.index', _external=True) }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ config.SITE_NAME }}",
+    "url": "{{ url_for('main.index', _external=True) }}",
+    "jobTitle": "Full-Stack Developer & Digital Architect"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ config.SITE_NAME }}",
+    "url": "{{ url_for('main.index', _external=True) }}"
+  },
+  "inLanguage": "en-US",
+  "genre": ["Technology", "Programming", "Web Development"],
+  "keywords": [
+    "Programming",
+    "Python",
+    "Web Development", 
+    "AI/ML",
+    "Full-Stack Development",
+    "Technical Tutorials"
+  ]
+}
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">

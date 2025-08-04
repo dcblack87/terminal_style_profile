@@ -6,9 +6,47 @@
     <meta name="description" content="{% block meta_description %}{{ config.SITE_TAGLINE }}{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}developer, programmer, full-stack, python, flask, terminal{% endblock %}">
     <meta name="author" content="{{ config.SITE_NAME }}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{% block canonical_url %}{{ request.url }}{% endblock %}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ request.url }}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/og-image.jpg', _external=True) }}{% endblock %}">
+    <meta property="og:site_name" content="{{ config.SITE_NAME }}">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{% block twitter_url %}{{ request.url }}{% endblock %}">
+    <meta property="twitter:title" content="{% block twitter_title %}{{ self.title() }}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{{ self.meta_description() }}{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='images/og-image.jpg', _external=True) }}{% endblock %}">
+    {% if config.TWITTER_URL %}
+    <meta property="twitter:creator" content="{{ config.TWITTER_URL.split('/')[-1] }}">
+    {% endif %}
+    
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#00ff00">
+    <meta name="msapplication-TileColor" content="#000012">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ url_for('main.manifest_json') }}">
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2M9Y8B8GLX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-2M9Y8B8GLX');
+    </script>
     
     <title>{% block title %}{{ config.SITE_NAME }}{% endblock %}</title>
     
@@ -278,6 +316,36 @@
         }
     </style>
     
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {% block structured_data %}
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "{{ config.SITE_NAME }}",
+      "url": "{{ url_for('main.index', _external=True) }}",
+      "description": "{{ config.SITE_TAGLINE }}",
+      "jobTitle": "Full-Stack Developer & Digital Architect",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Independent"
+      },
+      "sameAs": [
+        "{{ config.GITHUB_URL }}",
+        "{{ config.TWITTER_URL }}"
+      ],
+      "knowsAbout": [
+        "Web Development",
+        "Python",
+        "Flask",
+        "JavaScript",
+        "AI/ML",
+        "Digital Architecture"
+      ]
+    }
+    {% endblock %}
+    </script>
+
     {% block extra_head %}{% endblock %}
 </head>
 <body class="h-full bg-black text-gray-200">

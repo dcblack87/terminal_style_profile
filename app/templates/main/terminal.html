@@ -2,7 +2,53 @@
 
 {% block title %}Interactive Terminal - {{ config.SITE_NAME }}{% endblock %}
 
-{% block meta_description %}Experience an interactive terminal interface to explore my portfolio, skills, and recent projects through command-line navigation.{% endblock %}
+{% block meta_description %}Experience David Black's unique interactive terminal interface. Navigate through portfolio, skills, projects, and blog posts using real command-line interface. Try commands like 'help', 'portfolio', and 'about'.{% endblock %}
+
+{% block meta_keywords %}interactive terminal, command line interface, developer portfolio, terminal navigation, CLI portfolio, developer terminal, interactive website{% endblock %}
+
+{% block og_title %}Interactive Terminal - {{ config.SITE_NAME }}{% endblock %}
+{% block og_type %}website{% endblock %}
+
+{% block canonical_url %}{{ url_for('main.terminal', _external=True) }}{% endblock %}
+
+{% block structured_data %}
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "{{ config.SITE_NAME }} Interactive Terminal",
+  "description": "Interactive command-line interface for exploring David Black's portfolio, skills, and projects",
+  "url": "{{ url_for('main.terminal', _external=True) }}",
+  "applicationCategory": "WebApplication",
+  "operatingSystem": "Web Browser",
+  "browserRequirements": "JavaScript enabled",
+  "creator": {
+    "@type": "Person",
+    "name": "{{ config.SITE_NAME }}",
+    "url": "{{ url_for('main.index', _external=True) }}"
+  },
+  "featureList": [
+    "Interactive command-line interface",
+    "Portfolio navigation", 
+    "Skill exploration",
+    "Project details",
+    "Blog post access",
+    "Contact information",
+    "Command history",
+    "Tab completion"
+  ],
+  "potentialAction": {
+    "@type": "UseAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ url_for('main.terminal', _external=True) }}",
+      "actionPlatform": [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform"
+      ]
+    }
+  }
+}
+{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
