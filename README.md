@@ -126,7 +126,7 @@ Experience the full terminal-themed interface, interactive commands, portfolio s
      - **Username**: `admin`
      - **Password**: `TempPassword123!`
 
-   ⚠️ **Important**: Change the default admin credentials immediately after first login!
+> ⚠️ **Demo Credentials**: These are for initial testing only. Never use them in production. Be sure to change the default admin username and password immediately after first login!
 
 ## ⚙️ Configuration
 
