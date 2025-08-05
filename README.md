@@ -77,7 +77,7 @@ Experience the full terminal-themed interface, interactive commands, portfolio s
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/terminal-portfolio.git
+   git clone https://github.com/dcblack87/terminal-portfolio.git
    cd terminal-portfolio
    ```
 
