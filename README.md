@@ -1,6 +1,5 @@
 # Terminal Portfolio & Blog Platform
 
-<h2>🖼️ Screenshot</h2>
 <img src="app/static/images/david black terminal theme website.png" alt="Terminal Portfolio Screenshot" width="100%">
 
 A sleek, terminal-themed personal portfolio and blog platform built with Flask. Perfect for developers, engineers, and tech professionals who want to showcase their work with a distinctive hacker aesthetic.
