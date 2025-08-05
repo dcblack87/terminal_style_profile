@@ -96,13 +96,13 @@ Experience the full terminal-themed interface, interactive commands, portfolio s
 
 2. **Create a virtual environment**
    ```bash
-   python -m venv venv
-   
-   # On Windows
-   venv\Scripts\activate
-   
+   python3 -m venv venv
+
    # On macOS/Linux  
    source venv/bin/activate
+
+   # On Windows (PowerShell)
+   .\venv\Scripts\Activate.ps1
    ```
 
 3. **Install dependencies**
@@ -112,12 +112,12 @@ Experience the full terminal-themed interface, interactive commands, portfolio s
 
 4. **Run database migrations**
    ```bash
-   python migrate.py
+   python3 migrate.py
    ```
 
 5. **Start the application**
    ```bash
-   python run.py
+   python3 run.py
    ```
 
 6. **Access your site**
