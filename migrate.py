@@ -6,7 +6,7 @@ Runs database migrations for the terminal portfolio site.
 Works on both local development and PythonAnywhere.
 
 Usage:
-    python migrate.py                    # Run all pending migrations
+    python migrate.py                   # Run all pending migrations
     python migrate.py --list            # List all migrations
     python migrate.py --rollback        # Rollback last migration
     python migrate.py --specific 001    # Run specific migration
