@@ -7,6 +7,19 @@ A sleek, terminal-themed personal portfolio and blog platform built with Flask. 
 ![Flask](https://img.shields.io/badge/Flask-2.3+-red?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
+## 📚 Table of Contents
+- [Live Demo](#-live-demo)
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Configuration](#-configuration)
+- [Customization](#-customization)
+- [Project Structure](#-project-structure)
+- [Deployment](#-deployment)
+- [Development](#-development)
+- [Support](#-support)
+- [License](#-license)
+- [Acknowledgments](#-acknowledgments)
+
 ## 🌐 Live Demo
 
 **See it in action:** [https://www.dcblack.co.uk](https://www.dcblack.co.uk)
@@ -77,19 +90,19 @@ Experience the full terminal-themed interface, interactive commands, portfolio s
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/terminal-portfolio.git
+   git clone https://github.com/dcblack87/terminal-portfolio.git
    cd terminal-portfolio
    ```
 
 2. **Create a virtual environment**
    ```bash
-   python -m venv venv
-   
-   # On Windows
-   venv\Scripts\activate
-   
+   python3 -m venv venv
+
    # On macOS/Linux  
    source venv/bin/activate
+
+   # On Windows (PowerShell)
+   .\venv\Scripts\Activate.ps1
    ```
 
 3. **Install dependencies**
@@ -99,12 +112,12 @@ Experience the full terminal-themed interface, interactive commands, portfolio s
 
 4. **Run database migrations**
    ```bash
-   python migrate.py
+   python3 migrate.py
    ```
 
 5. **Start the application**
    ```bash
-   python run.py
+   python3 run.py
    ```
 
 6. **Access your site**
@@ -113,7 +126,7 @@ Experience the full terminal-themed interface, interactive commands, portfolio s
      - **Username**: `admin`
      - **Password**: `TempPassword123!`
 
-   ⚠️ **Important**: Change the default admin credentials immediately after first login!
+> ⚠️ **Demo Credentials**: These are for initial testing only. Never use them in production. Be sure to change the default admin username and password immediately after first login!
 
 ## ⚙️ Configuration
 
@@ -298,14 +311,29 @@ terminal-portfolio/
 FROM python:3.9-slim
 
 WORKDIR /app
-COPY requirements.txt .
+COPY requirements.txt .  
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY . .  
 EXPOSE 5000
 
 CMD ["python", "run.py"]
 ```
+
+> ⚠️ Make sure your `.env` file is available in the container:
+> 
+> - You can **copy** it into the image by adding this line to your Dockerfile (after `COPY requirements.txt .`):
+>   ```dockerfile
+>   COPY .env .env
+>   ```
+> 
+> - Or **mount it at runtime** using:
+>   ```bash
+>   docker run --env-file .env -p 5000:5000 your-image-name
+>   ```
+>
+> This ensures environment variables like `SECRET_KEY`, `ADMIN_PASSWORD`, and email/GitHub config are properly loaded inside the container.
+
 
 ## 🛠️ Development
 
