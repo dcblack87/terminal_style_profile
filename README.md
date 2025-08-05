@@ -7,6 +7,20 @@ A sleek, terminal-themed personal portfolio and blog platform built with Flask. 
 ![Flask](https://img.shields.io/badge/Flask-2.3+-red?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
+## 📚 Table of Contents
+- [Live Demo](#-live-demo)
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [Configuration](#-configuration)
+- [Customization](#-customization)
+- [Project Structure](#-project-structure)
+- [Deployment](#-deployment)
+- [Development](#-development)
+- [Support](#-support)
+- [License](#-license)
+- [Acknowledgments](#-acknowledgments)
+
+
 ## 🌐 Live Demo
 
 **See it in action:** [https://www.dcblack.co.uk](https://www.dcblack.co.uk)
