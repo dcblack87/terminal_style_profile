@@ -20,7 +20,6 @@ A sleek, terminal-themed personal portfolio and blog platform built with Flask. 
 - [License](#-license)
 - [Acknowledgments](#-acknowledgments)
 
-
 ## 🌐 Live Demo
 
 **See it in action:** [https://www.dcblack.co.uk](https://www.dcblack.co.uk)
@@ -312,14 +311,29 @@ terminal-portfolio/
 FROM python:3.9-slim
 
 WORKDIR /app
-COPY requirements.txt .
+COPY requirements.txt .  
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY . .  
 EXPOSE 5000
 
 CMD ["python", "run.py"]
 ```
+
+> ⚠️ Make sure your `.env` file is available in the container:
+> 
+> - You can **copy** it into the image by adding this line to your Dockerfile (after `COPY requirements.txt .`):
+>   ```dockerfile
+>   COPY .env .env
+>   ```
+> 
+> - Or **mount it at runtime** using:
+>   ```bash
+>   docker run --env-file .env -p 5000:5000 your-image-name
+>   ```
+>
+> This ensures environment variables like `SECRET_KEY`, `ADMIN_PASSWORD`, and email/GitHub config are properly loaded inside the container.
+
 
 ## 🛠️ Development
 
