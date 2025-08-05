@@ -414,6 +414,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ for developers who love the terminal aesthetic**
+**Built with ❤️ by David Black, let's [connect on X](https://x.com/davidwentnomad)**
 
 Made something cool with this template? [Let me know!](https://www.dcblack.co.uk/contact)
