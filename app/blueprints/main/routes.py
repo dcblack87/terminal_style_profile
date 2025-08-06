@@ -186,7 +186,7 @@ def terminal_command(command):
     responses = {
         'about': {
             'output': [
-                'Full-Stack Developer & Digital Architect',
+                'Full-Stack Founder and Digital Nomad',
                 '',
                 'Building innovative web applications and digital experiences.',
                 'Passionate about clean code, user experience, and emerging technologies.',
@@ -260,7 +260,7 @@ def terminal_command(command):
                 'guest@dcblack.co.uk',
                 '',
                 'You are browsing the personal terminal of a',
-                'Full-Stack Developer and Digital Architect.',
+                'Full-Stack Founder and Digital Nomad.',
                 '',
                 'Current location: The Internet',
                 'Status: Making apps for fun and profit'

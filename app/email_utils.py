@@ -345,7 +345,7 @@ def send_contact_confirmation_email(name, email):
             
             <div class="signature">
                 <p class="name">David Black</p>
-                <p class="title">Full-Stack Developer & Digital Architect</p>
+                <p class="title">Full-Stack Founder and Digital Nomad</p>
                 <p style="margin-top: 10px; font-size: 14px;">Making apps for fun and profit from Thailand 🇹🇭</p>
             </div>
         </div>
@@ -373,7 +373,7 @@ In the meantime, feel free to check out my projects and latest updates on:
 
 Best regards,
 David Black
-Full-Stack Developer & Digital Architect
+Full-Stack Founder and Digital Nomad
 
 ---
 This is an automated confirmation. Please don't reply to this email.
