@@ -61,12 +61,12 @@
                     <div class="terminal-control control-minimize"></div>
                     <div class="terminal-control control-maximize"></div>
                 </div>
-                <span class="terminal-primary text-sm font-bold">
+                <span class="terminal-primary text-sm font-bold hidden md:inline">
                     <i class="fas fa-terminal mr-2"></i>
                     {{ config.SITE_NAME.lower() }}_terminal.sh
                 </span>
             </div>
-            <div class="terminal-muted text-xs">
+            <div class="terminal-muted text-xs hidden md:block">
                 user@{{ config.SITE_NAME.lower() }}:~$
             </div>
         </div>

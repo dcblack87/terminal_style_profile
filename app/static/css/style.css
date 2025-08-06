@@ -1795,6 +1795,14 @@ html {
 }
 
 @media (min-width: 768px) {
+  .md\:block {
+    display: block;
+  }
+
+  .md\:inline {
+    display: inline;
+  }
+
   .md\:flex {
     display: flex;
   }
