@@ -81,6 +81,14 @@
     @apply bg-transparent border-none outline-none text-green-400 font-mono flex-1 caret-green-400;
   }
 
+  .terminal-textarea {
+    @apply bg-transparent border border-gray-600 rounded p-3 outline-none text-green-400 font-mono resize-none focus:border-blue-400 transition-colors;
+  }
+
+  .terminal-recaptcha {
+    @apply flex justify-center;
+  }
+
   .terminal-prompt {
     @apply text-blue-400 font-mono flex-shrink-0;
   }

@@ -53,6 +53,10 @@ class Config:
     # Contact form settings
     CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'david.black@dcblack.co.uk')
     
+    # reCAPTCHA configuration
+    RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')
+    RECAPTCHA_PRIVATE_KEY = os.environ.get('RECAPTCHA_PRIVATE_KEY')
+    
     # Terminal theme colors
     TERMINAL_COLORS = {
         'primary': '#00ff00',    # Matrix green

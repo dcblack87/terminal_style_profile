@@ -6,6 +6,12 @@ from flask import render_template, request, flash, redirect, url_for, current_ap
 from app.blueprints.main import bp
 from app.models import BlogPost, PortfolioItem, ContactMessage
 from app.forms import ContactForm
+try:
+    from app.forms import ContactFormWithRecaptcha
+    RECAPTCHA_FORM_AVAILABLE = True
+except ImportError:
+    RECAPTCHA_FORM_AVAILABLE = False
+    ContactFormWithRecaptcha = None
 from app import db
 from app.github_stats import github_stats
 from app.email_utils import send_contact_form_email, send_contact_confirmation_email
@@ -54,7 +60,15 @@ def about():
 @bp.route('/contact/', methods=['GET', 'POST'])
 def contact():
     """Contact form page."""
-    form = ContactForm()
+    # Use reCAPTCHA form if available and configured
+    use_recaptcha = (RECAPTCHA_FORM_AVAILABLE and 
+                    current_app.config.get('RECAPTCHA_PUBLIC_KEY') and 
+                    current_app.config.get('RECAPTCHA_PRIVATE_KEY'))
+    
+    if use_recaptcha:
+        form = ContactFormWithRecaptcha()
+    else:
+        form = ContactForm()
     
     if form.validate_on_submit():
         # Create new contact message

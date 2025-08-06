@@ -2,12 +2,21 @@
 WTForms for the hacker terminal personal brand page.
 """
 
+from flask import current_app
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SelectField, HiddenField, RadioField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Optional, URL, ValidationError
 from wtforms.widgets import TextArea
 from app.models import User, Tag
+
+# Import RecaptchaField only if available
+try:
+    from flask_wtf.recaptcha import RecaptchaField
+    RECAPTCHA_AVAILABLE = True
+except ImportError:
+    RECAPTCHA_AVAILABLE = False
+    RecaptchaField = None
 
 class LoginForm(FlaskForm):
     """Login form for user authentication."""
@@ -29,6 +38,20 @@ class ContactForm(FlaskForm):
     message = TextAreaField('Message', validators=[DataRequired(), Length(min=10, max=2000)],
                            render_kw={'placeholder': 'Your message...', 'class': 'terminal-textarea', 'rows': 8})
     submit = StringField('Send Message', render_kw={'class': 'terminal-button', 'value': 'transmit'})
+    
+    @property
+    def has_recaptcha(self):
+        """Check if reCAPTCHA should be enabled."""
+        return (RECAPTCHA_AVAILABLE and 
+                current_app.config.get('RECAPTCHA_PUBLIC_KEY') and 
+                current_app.config.get('RECAPTCHA_PRIVATE_KEY'))
+
+
+# Create a separate form class with reCAPTCHA for when it's available
+if RECAPTCHA_AVAILABLE:
+    class ContactFormWithRecaptcha(ContactForm):
+        """Contact form with reCAPTCHA field."""
+        recaptcha = RecaptchaField()
 
 class BlogPostForm(FlaskForm):
     """Form for creating and editing blog posts."""
