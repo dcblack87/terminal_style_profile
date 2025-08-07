@@ -52,6 +52,7 @@ class Config:
     
     # Contact form settings
     CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'david.black@dcblack.co.uk')
+    CONTACT_FORM_ENABLED = os.environ.get('CONTACT_FORM_ENABLED', 'false').lower() in ['true', 'on', '1']
     
     # reCAPTCHA configuration
     RECAPTCHA_PUBLIC_KEY = os.environ.get('RECAPTCHA_PUBLIC_KEY')

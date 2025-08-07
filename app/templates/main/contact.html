@@ -85,7 +85,8 @@
     </section>
     
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Contact Form -->
+        {% if contact_form_enabled and form %}
+        <!-- Contact Form (when enabled) -->
         <section class="terminal-window">
             <div class="terminal-header">
                 <div class="flex items-center space-x-4">
@@ -204,6 +205,61 @@
                 </form>
             </div>
         </section>
+        {% else %}
+        <!-- Connect with Developer (when form is disabled) -->
+        <section class="terminal-window">
+            <div class="terminal-header">
+                <div class="flex items-center space-x-4">
+                    <div class="terminal-controls">
+                        <div class="terminal-control control-close"></div>
+                        <div class="terminal-control control-minimize"></div>
+                        <div class="terminal-control control-maximize"></div>
+                    </div>
+                    <span class="terminal-primary text-sm font-bold">
+                        <i class="fas fa-user-circle mr-2"></i>
+                        connect.app
+                    </span>
+                </div>
+            </div>
+            
+            <div class="p-12 text-center">
+                <!-- Developer Avatar -->
+                <div class="mb-8">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                        DB
+                    </div>
+                </div>
+                
+                <!-- Connect Section -->
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-bold terminal-primary">
+                        Connect with the developer
+                    </h2>
+                    
+                    <p class="text-lg terminal-secondary max-w-md mx-auto">
+                        Chat about your projects with @DavidWentNomad on X
+                    </p>
+                    
+                    <!-- Twitter/X Connect Button -->
+                    {% if config.TWITTER_URL %}
+                    <div class="mt-8">
+                        <a href="{{ config.TWITTER_URL }}" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center px-8 py-4 bg-black hover:bg-gray-900 border border-gray-700 hover:border-blue-400 rounded-lg transition-all duration-300 group">
+                            <i class="fab fa-twitter text-blue-400 text-xl mr-3 group-hover:scale-110 transition-transform"></i>
+                            <span class="terminal-primary font-semibold text-lg group-hover:text-blue-400">Connect on X</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Status Indicator -->
+                    <div class="mt-6 flex items-center justify-center space-x-2">
+                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        <span class="terminal-muted text-sm">Usually responds within a few hours</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
         
         <!-- Contact Information -->
         <section class="space-y-8">

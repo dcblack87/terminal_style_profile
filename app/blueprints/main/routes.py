@@ -60,6 +60,13 @@ def about():
 @bp.route('/contact/', methods=['GET', 'POST'])
 def contact():
     """Contact form page."""
+    # Check if contact form is enabled
+    contact_form_enabled = current_app.config.get('CONTACT_FORM_ENABLED', False)
+    
+    # If form is disabled, just render the page without form processing
+    if not contact_form_enabled:
+        return render_template('main/contact.html', form=None, contact_form_enabled=False)
+    
     # Use reCAPTCHA form if available and configured
     use_recaptcha = (RECAPTCHA_FORM_AVAILABLE and 
                     current_app.config.get('RECAPTCHA_PUBLIC_KEY') and 
@@ -113,7 +120,7 @@ def contact():
             
         return redirect(url_for('main.contact'))
     
-    return render_template('main/contact.html', form=form)
+    return render_template('main/contact.html', form=form, contact_form_enabled=True)
 
 @bp.route('/terminal')
 @bp.route('/terminal/')
