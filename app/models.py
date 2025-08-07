@@ -242,36 +242,11 @@ class ContactMessage(db.Model):
     message = db.Column(db.Text, nullable=False)
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-    ip_address = db.Column(db.String(45), index=True)  # Support IPv6
-    user_agent = db.Column(db.String(500))
-    is_spam = db.Column(db.Boolean, default=False)
-    spam_score = db.Column(db.Float, default=0.0)
     
     def mark_as_read(self):
         """Mark the message as read."""
         self.is_read = True
         db.session.commit()
     
-    def mark_as_spam(self):
-        """Mark the message as spam."""
-        self.is_spam = True
-        db.session.commit()
-    
     def __repr__(self):
         return f'<ContactMessage from {self.name}>'
-
-
-class ContactSubmissionLog(db.Model):
-    """Track contact form submissions for rate limiting and spam detection."""
-    
-    __tablename__ = 'contact_submission_logs'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    ip_address = db.Column(db.String(45), nullable=False, index=True)
-    email = db.Column(db.String(120), index=True)
-    submitted_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-    success = db.Column(db.Boolean, default=True)
-    user_agent = db.Column(db.String(500))
-    
-    def __repr__(self):
-        return f'<ContactSubmissionLog {self.ip_address} at {self.submitted_at}>'

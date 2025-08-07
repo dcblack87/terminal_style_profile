@@ -37,15 +37,6 @@ class ContactForm(FlaskForm):
                          render_kw={'placeholder': 'Message subject', 'class': 'terminal-input'})
     message = TextAreaField('Message', validators=[DataRequired(), Length(min=10, max=2000)],
                            render_kw={'placeholder': 'Your message...', 'class': 'terminal-textarea', 'rows': 8})
-    
-    # Honeypot fields (hidden from users, but bots might fill them)
-    website = StringField('Website', validators=[Optional()], 
-                         render_kw={'style': 'display: none !important;', 'tabindex': '-1', 'autocomplete': 'off'})
-    phone_number = StringField('Phone', validators=[Optional()],
-                              render_kw={'style': 'display: none !important;', 'tabindex': '-1', 'autocomplete': 'off'})
-    company = StringField('Company', validators=[Optional()],
-                         render_kw={'style': 'display: none !important;', 'tabindex': '-1', 'autocomplete': 'off'})
-    
     submit = StringField('Send Message', render_kw={'class': 'terminal-button', 'value': 'transmit'})
     
     @property
@@ -54,21 +45,6 @@ class ContactForm(FlaskForm):
         return (RECAPTCHA_AVAILABLE and 
                 current_app.config.get('RECAPTCHA_PUBLIC_KEY') and 
                 current_app.config.get('RECAPTCHA_PRIVATE_KEY'))
-    
-    def validate_website(self, field):
-        """Honeypot validation - this field should be empty."""
-        if field.data:
-            raise ValidationError('Bot detected')
-    
-    def validate_phone_number(self, field):
-        """Honeypot validation - this field should be empty."""
-        if field.data:
-            raise ValidationError('Bot detected')
-    
-    def validate_company(self, field):
-        """Honeypot validation - this field should be empty."""
-        if field.data:
-            raise ValidationError('Bot detected')
 
 
 # Create a separate form class with reCAPTCHA for when it's available
@@ -76,20 +52,6 @@ if RECAPTCHA_AVAILABLE:
     class ContactFormWithRecaptcha(ContactForm):
         """Contact form with reCAPTCHA field."""
         recaptcha = RecaptchaField()
-        
-        def validate(self, **kwargs):
-            """Enhanced validation that tracks reCAPTCHA completion time."""
-            from flask import session
-            from datetime import datetime
-            
-            # Call parent validation first
-            if not super().validate(**kwargs):
-                return False
-            
-            # Track when reCAPTCHA was successfully validated
-            session['last_recaptcha_validation'] = datetime.utcnow().isoformat()
-            
-            return True
 
 class BlogPostForm(FlaskForm):
     """Form for creating and editing blog posts."""
