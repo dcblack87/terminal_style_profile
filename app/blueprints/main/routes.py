@@ -2,7 +2,7 @@
 Main blueprint routes for the hacker terminal personal brand page.
 """
 
-from flask import render_template, request, flash, redirect, url_for, current_app
+from flask import render_template, request, flash, redirect, url_for, current_app, session
 from app.blueprints.main import bp
 from app.models import BlogPost, PortfolioItem, ContactMessage
 from app.forms import ContactForm
@@ -59,7 +59,13 @@ def about():
 @bp.route('/contact', methods=['GET', 'POST'])
 @bp.route('/contact/', methods=['GET', 'POST'])
 def contact():
-    """Contact form page."""
+    """Contact form page with comprehensive spam protection."""
+    from app.security_utils import (
+        get_client_ip, check_rate_limit, calculate_spam_score,
+        is_suspicious_user_agent, log_submission_attempt, is_honeypot_triggered
+    )
+    from datetime import datetime
+    
     # Use reCAPTCHA form if available and configured
     use_recaptcha = (RECAPTCHA_FORM_AVAILABLE and 
                     current_app.config.get('RECAPTCHA_PUBLIC_KEY') and 
@@ -71,34 +77,116 @@ def contact():
         form = ContactForm()
     
     if form.validate_on_submit():
-        # Create new contact message
+        client_ip = get_client_ip()
+        user_agent = request.headers.get('User-Agent', '')
+        
+        # Security checks
+        security_failed = False
+        failure_reason = None
+        
+        # 1. Rate limiting check
+        is_allowed, rate_info = check_rate_limit(client_ip, form.email.data)
+        if not is_allowed:
+            security_failed = True
+            failure_reason = "rate_limit_exceeded"
+            current_app.logger.warning(f"Rate limit exceeded for IP {client_ip}")
+            flash('Too many requests. Please wait before submitting another message.', 'error')
+        
+        # 2. Honeypot check
+        elif is_honeypot_triggered(request.form.to_dict()):
+            security_failed = True
+            failure_reason = "honeypot_triggered"
+            current_app.logger.warning(f"Honeypot triggered for IP {client_ip}")
+            # Don't show error message to bot - just silently fail
+            flash('Message sent successfully! I\'ll get back to you soon.', 'success')
+        
+        # 3. Suspicious User-Agent check
+        elif is_suspicious_user_agent(user_agent):
+            security_failed = True
+            failure_reason = "suspicious_user_agent"
+            current_app.logger.warning(f"Suspicious user agent from IP {client_ip}: {user_agent}")
+            flash('Your browser appears to be automated. Please use a standard web browser.', 'error')
+        
+        # 4. reCAPTCHA freshness check (if enabled)
+        elif use_recaptcha and 'last_recaptcha_validation' in session:
+            last_validation = session.get('last_recaptcha_validation')
+            if last_validation:
+                try:
+                    last_time = datetime.fromisoformat(last_validation)
+                    if (datetime.utcnow() - last_time).total_seconds() < 2:
+                        security_failed = True
+                        failure_reason = "recaptcha_too_fast"
+                        current_app.logger.warning(f"reCAPTCHA solved too quickly by IP {client_ip}")
+                        flash('Please wait a moment before submitting.', 'error')
+                except:
+                    pass
+        
+        # Log the submission attempt
+        log_submission_attempt(client_ip, form.email.data, success=not security_failed)
+        
+        if security_failed:
+            # Mark reCAPTCHA as used to prevent reuse
+            if 'last_recaptcha_validation' in session:
+                del session['last_recaptcha_validation']
+            return redirect(url_for('main.contact'))
+        
+        # Calculate spam score
+        spam_score = calculate_spam_score(
+            form.name.data, 
+            form.email.data, 
+            form.subject.data or '', 
+            form.message.data
+        )
+        
+        # Create new contact message with security data
         message = ContactMessage(
             name=form.name.data,
             email=form.email.data,
             subject=form.subject.data,
-            message=form.message.data
+            message=form.message.data,
+            ip_address=client_ip,
+            user_agent=user_agent[:500],  # Truncate to fit database
+            spam_score=spam_score,
+            is_spam=(spam_score > 0.7)  # Mark as spam if score is high
         )
         
         db.session.add(message)
         
         try:
-            # Send email notification
-            email_sent = send_contact_form_email(
-                name=form.name.data,
-                email=form.email.data,
-                subject=form.subject.data,
-                message=form.message.data
-            )
+            # Only send emails for non-spam messages
+            email_sent = False
+            confirmation_sent = False
             
-            # Send confirmation email to user
-            confirmation_sent = send_contact_confirmation_email(
-                name=form.name.data,
-                email=form.email.data
-            )
+            if not message.is_spam:
+                # Send email notification
+                email_sent = send_contact_form_email(
+                    name=form.name.data,
+                    email=form.email.data,
+                    subject=form.subject.data,
+                    message=form.message.data
+                )
+                
+                # Send confirmation email to user
+                confirmation_sent = send_contact_confirmation_email(
+                    name=form.name.data,
+                    email=form.email.data
+                )
+            else:
+                current_app.logger.warning(f"Spam message detected (score: {spam_score:.3f}) from {client_ip}")
             
             db.session.commit()
             
-            if email_sent:
+            # Mark reCAPTCHA as used
+            if 'last_recaptcha_validation' in session:
+                del session['last_recaptcha_validation']
+            
+            # Update session timestamp to prevent rapid resubmission
+            session['last_submission'] = datetime.utcnow().isoformat()
+            
+            if message.is_spam:
+                # Show success message to potential spammer to avoid revealing detection
+                flash('Message sent successfully! I\'ll get back to you soon.', 'success')
+            elif email_sent:
                 flash('Message sent successfully! I\'ll get back to you soon.', 'success')
             else:
                 flash('Message saved but email notification failed. I\'ll still see your message and respond soon.', 'warning')
@@ -109,6 +197,10 @@ def contact():
             flash('There was an error sending your message. Please try again or contact me directly.', 'error')
             
         return redirect(url_for('main.contact'))
+    
+    # For GET requests, mark reCAPTCHA validation timestamp if form was just loaded
+    if request.method == 'GET' and use_recaptcha:
+        session['form_loaded_at'] = datetime.utcnow().isoformat()
     
     return render_template('main/contact.html', form=form)
 

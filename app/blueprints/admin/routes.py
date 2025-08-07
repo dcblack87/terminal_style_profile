@@ -412,6 +412,57 @@ def delete_message(id):
     flash('Message deleted successfully!', 'success')
     return redirect(url_for('admin.messages'))
 
+@bp.route('/messages/spam/<int:id>')
+@login_required
+@admin_required
+def mark_message_spam(id):
+    """Mark a message as spam."""
+    message = ContactMessage.query.get_or_404(id)
+    message.mark_as_spam()
+    flash('Message marked as spam!', 'success')
+    return redirect(url_for('admin.messages'))
+
+@bp.route('/messages/not-spam/<int:id>')
+@login_required
+@admin_required
+def mark_message_not_spam(id):
+    """Mark a message as not spam."""
+    message = ContactMessage.query.get_or_404(id)
+    message.is_spam = False
+    db.session.commit()
+    flash('Message marked as not spam!', 'success')
+    return redirect(url_for('admin.messages'))
+
+@bp.route('/security-logs')
+@login_required
+@admin_required
+def security_logs():
+    """View contact form security logs."""
+    from app.models import ContactSubmissionLog
+    
+    page = request.args.get('page', 1, type=int)
+    filter_ip = request.args.get('ip', '')
+    filter_success = request.args.get('success', '')
+    
+    query = ContactSubmissionLog.query
+    
+    if filter_ip:
+        query = query.filter(ContactSubmissionLog.ip_address.contains(filter_ip))
+    
+    if filter_success == 'true':
+        query = query.filter_by(success=True)
+    elif filter_success == 'false':
+        query = query.filter_by(success=False)
+    
+    logs = query.order_by(ContactSubmissionLog.submitted_at.desc()).paginate(
+        page=page, per_page=50, error_out=False
+    )
+    
+    return render_template('admin/security_logs.html', 
+                         logs=logs, 
+                         filter_ip=filter_ip, 
+                         filter_success=filter_success)
+
 # User Profile Management
 @bp.route('/profile', methods=['GET', 'POST'])
 @login_required
