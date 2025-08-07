@@ -176,12 +176,8 @@ def contact():
             
             db.session.commit()
             
-            # Mark reCAPTCHA as used
-            if 'last_recaptcha_validation' in session:
-                del session['last_recaptcha_validation']
-            
-            # Update session timestamp to prevent rapid resubmission
-            session['last_submission'] = datetime.utcnow().isoformat()
+            # Invalidate session to prevent reuse
+            session.clear()  # This forces bots to solve reCAPTCHA again
             
             if message.is_spam:
                 # Show success message to potential spammer to avoid revealing detection
