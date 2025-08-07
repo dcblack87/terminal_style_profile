@@ -51,7 +51,7 @@ class Config:
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
     
     # Contact form settings
-    CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'david.black@dcblack.co.uk')
+    CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'team@youremail.com')
     CONTACT_FORM_ENABLED = os.environ.get('CONTACT_FORM_ENABLED', 'false').lower() in ['true', 'on', '1']
     
     # reCAPTCHA configuration
