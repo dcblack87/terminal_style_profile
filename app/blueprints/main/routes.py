@@ -2,7 +2,7 @@
 Main blueprint routes for the hacker terminal personal brand page.
 """
 
-from flask import render_template, request, flash, redirect, url_for, current_app
+from flask import render_template, request, flash, redirect, url_for, current_app, session
 from app.blueprints.main import bp
 from app.models import BlogPost, PortfolioItem, ContactMessage
 from app.forms import ContactForm
@@ -97,6 +97,9 @@ def contact():
             )
             
             db.session.commit()
+            
+            # Invalidate session to prevent reuse
+            session.clear()  # This forces bots to solve reCAPTCHA again
             
             if email_sent:
                 flash('Message sent successfully! I\'ll get back to you soon.', 'success')
